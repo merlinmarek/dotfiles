@@ -1,0 +1,10 @@
+{
+	"error not nil return": {
+		"prefix": "err",
+		"body": [
+			"if err != nil {",
+			"\treturn fmt.Errorf(\"$0: %w\")",
+			"}"
+		]
+	}
+}

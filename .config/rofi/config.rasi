@@ -1,0 +1,8 @@
+configuration {
+width: 20;
+lines: 5;
+sort: true;
+sorting-method: "fzf";
+matching: "fuzzy";
+}
+@theme "Apprentice"

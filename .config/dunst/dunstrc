@@ -1,0 +1,40 @@
+[global]
+    # show on the monitor that has keyboard focus
+    follow = keyboard
+
+    # show in the upper right corner
+    # {width}x{height}{+-x}{+-y}
+    geometry = "300x3-7+30"
+
+    hide_duplicate_count = yes
+
+    corner_radius = 5
+
+    # formatting
+    font = Droid Sans Mono Nerd Font 16
+    separator_height = 1
+    separator_color = frame
+    horizontal_padding = 4
+    markup=full
+    padding = 2
+    format = "%s\n%b"
+    word_wrap=yes
+
+[frame]
+    width = 1
+    color = "#bcbcbc"
+
+[urgency_low]
+    foreground = "#5f8787"
+    background = "#2e2e2e"
+    timeout = 3
+
+[urgency_normal]
+    foreground = "#bcbcbc"
+    background = "#2e2e2e"
+    timeout = 3
+
+[urgency_critical]
+    foreground = "#af5f5f"
+    background = "#2e2e2e"
+    timeout = 6

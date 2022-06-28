@@ -1,0 +1,7 @@
+[user]
+	email = merlin.marek@posteo.net
+	name = Merlin Marek
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main

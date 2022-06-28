@@ -1,0 +1,109 @@
+# alt key as modifier
+set $mod Mod1
+
+font pango:Droid Sans Mono 16
+
+bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+q kill
+bindsym $mod+d exec rofi -show run
+bindsym $mod+p exec rofi-pass
+bindsym F11 exec setxkbmap de -option caps:swapescape
+bindsym F10 exec xkbcomp -I$HOME/.config/xkb ~/.config/xkb/map $DISPLAY
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+bindsym $mod+Ctrl+h move left
+bindsym $mod+Ctrl+j move down
+bindsym $mod+Ctrl+k move up
+bindsym $mod+Ctrl+l move right
+
+bindsym $mod+v split v
+
+bindsym $mod+f fullscreen
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Ctrl+space floating toggle
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Ctrl+1 move container to workspace number 1
+bindsym $mod+Ctrl+2 move container to workspace number 2
+bindsym $mod+Ctrl+3 move container to workspace number 3
+bindsym $mod+Ctrl+4 move container to workspace number 4
+bindsym $mod+Ctrl+5 move container to workspace number 5
+bindsym $mod+Ctrl+6 move container to workspace number 6
+bindsym $mod+Ctrl+7 move container to workspace number 7
+bindsym $mod+Ctrl+8 move container to workspace number 8
+bindsym $mod+Ctrl+9 move container to workspace number 9
+bindsym $mod+Ctrl+10 move container to workspace number 10
+
+bindsym $mod+Ctrl+a move scratchpad
+bindsym $mod+a scratchpad show
+
+bindsym $mod+Ctrl+c reload
+bindsym $mod+Ctrl+r restart
+bindsym $mod+Ctrl+e exit
+
+bar {
+	position top
+	colors {
+		background #262626
+		statusline #cccccc
+		separator #868686
+		focused_workspace #666666 #464646 #ffffff
+	}
+	status_command i3status
+}
+
+client.focused  #666666 #464646 #ffffff #999999 #666666
+client.focused_inactive  #333333 #222222 #888888 #292d2e #222222
+
+# rename windows
+bindsym $mod+r exec i3-msg title_format `zenity --title "set window title" --text "" --entry`
+
+# jump to names windows using rofi
+bindsym $mod+i exec ~/.bin/rofi-select-window
+
+# audio
+bindsym XF86AudioRaiseVolume exec amixer -q sset Master 1%+
+bindsym XF86AudioLowerVolume exec amixer -q sset Master 1%-
+
+bindsym XF86AudioMute exec amixer set Master toggle
+
+# brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+
+# screenshots
+bindsym Print exec flameshot full -p /tmp
+bindsym Shift+Print exec flameshot gui -p /tmp
+
+# lock screen
+bindsym Pause exec i3lock -c 262626 && sleep 0.3 && xset dpms force off
+
+# background color
+exec_always --no-startup-id xsetroot -solid "#262626"
+
+exec --no-startup-id zsh -c '$HOME/.bin/i3layout'
+exec --no-startup-id redshift
+exec --no-startup-id dunst
+
+# faster key repeat
+exec_always --no-startup-id xset r rate 180 70
+
+# this should probably be somewhere else...
+exec_always --no-startup-id xkbcomp -I$HOME/.config/xkb ~/.config/xkb/map $DISPLAY

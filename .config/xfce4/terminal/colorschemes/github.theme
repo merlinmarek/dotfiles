@@ -1,0 +1,8 @@
+[Scheme]
+Name=github
+ColorCursor=#000000
+TabActivityColor=#ff0000
+ColorForeground=#000000
+ColorBackground=#ffffff
+ColorPalette=#1c1c1c;#b31d28;#22863a;#87875f;#032f62;#45267d;#18b2b2;#dadada;#686868;#d73a49;#3ebc5c;#cece55;#005cc5;#6f42c1;#54ffff;#ffffff
+ColorBoldUseDefault=FALSE

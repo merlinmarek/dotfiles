@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+selected=$(i3-msg -t get_tree | jq -r '.. | objects | select(.title_format != null) | .title_format' | rofi -no-auto-select -dmenu -p 'focus')
+if [ -z "$selected" ]
+then
+	exit 1
+fi
+
+id=$(i3-msg -t get_tree | jq -r ".. | objects | select(.title_format == \"$selected\") | .id")
+if [ -z "$id" ]
+then
+	exit 1
+fi
+
+i3-msg "[con_id=\"$id\"] focus"

@@ -1,0 +1,51 @@
+* {
+    color0: #1c1c1c;
+    color1: #b31d28;
+    color2: #22863a;
+    color3: #87875f;
+    color4: #032f62;
+    color5: #45267d;
+    color6: #18b2b2;
+    color7: #6c6c6c;
+    color8: #1c1c1c;
+    color9: #d73a49;
+    color10: #3ebc5c;
+    color11: #cece55;
+    color12: #005cc5;
+    color13: #6f42c1;
+    color14: #54ffff;
+    color15: #ffffff;
+    background: #ffffff;
+    foreground: #000000;
+
+    highlight: none #58d676;
+    background-color: @background;
+    text-color: @foreground;
+    spacing: 0;
+    font: "Droid Sans Mono 12";
+}
+#window {
+    border: 1px;
+    border-color: @foreground;
+    padding: 5;
+}
+#listview {
+    border:       1px 0px 0px ;
+    border-color: @foreground;
+    spacing:      1px ;
+    scrollbar:    false;
+    padding:      3px 0px 0px ;
+    margin: 3px 0px 0px ;
+}
+#element.selected {
+    background-color: @color7;
+}
+#inputbar {
+    children:   [ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+#textbox-prompt-colon {
+    expand:     false;
+    str:        ":";
+    margin:     0px 0.3em 0em 0em ;
+}
+

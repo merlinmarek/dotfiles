@@ -1,0 +1,83 @@
+{
+  "snippets.priority": 1000,
+  "snippets.userSnippetsDirectory": "~/.snippets",
+  "diagnostic.refreshOnInsertMode": false,
+  "diagnostic.virtualText": false,
+  "prettier.semi": false,
+  "prettier.trailingComma": "all",
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      "semi": false,
+      "trailingComma": "all"
+    }
+  },
+  "diagnostic.warningSign": ">>",
+  "coc.preferences.extensionUpdateCheck": "never",
+  "coc.preferences.formatOnSaveFiletypes": [
+    "dart",
+    "html",
+    "json",
+    "go",
+    "c",
+    "cpp",
+    "python",
+    "rust",
+    "vue",
+    "javascript",
+    "typescript",
+    "svelte"
+  ],
+  "go.goplsOptions": {
+    "gofumpt": true
+  },
+  "rust-analyzer.inlayHints.chainingHints": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.mypyEnabled": true,
+  "python.linting.enabled": true,
+  "python.pythonPath": "python3",
+  "python.formatting.provider": "black",
+  "suggest.noselect": false,
+  "suggest.completionItemKindLabels": {
+    "function": "\uf794",
+    "method": "\uf6a6",
+    "variable": "\uf71b",
+    "constant": "\uf8ff",
+    "struct": "\ufb44",
+    "class": "\uf0e8",
+    "interface": "\ufa52",
+    "text": "\ue612",
+    "enum": "\uf435",
+    "enumMember": "\uf02b",
+    "module": "\uf668",
+    "color": "\ue22b",
+    "property": "\ufab6",
+    "field": "\uf93d",
+    "unit": "\uf475",
+    "file": "\uf471",
+    "value": "\uf8a3",
+    "event": "\ufacd",
+    "folder": "\uf115",
+    "keyword": "\uf893",
+    "snippet": "\uf64d",
+    "operator": "\uf915",
+    "reference": "\uf87a",
+    "typeParameter": "\uf278",
+    "default": "\uf29c"
+  },
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp"],
+      "rootPatterns": ["compile_commands.json", ".git/"],
+      "initializationOptions": {
+        "cacheDirectory": "/tmp/ccls"
+      }
+    },
+    "godot": {
+      "host": "127.0.0.1",
+      "filetypes": ["gdscript"],
+      "port": 6008
+    }
+  },
+  "svelte.enable-ts-plugin": true
+}

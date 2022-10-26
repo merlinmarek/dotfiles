@@ -63,7 +63,7 @@ fzf-cdr-widget() {
   cd "$dir"
   unset dir # ensure this doesn't end up appearing in prompt expansion
   local ret=$?
-  zle fzf-redraw-prompt
+  zle reset-prompt
   return $ret
 }
 
@@ -159,8 +159,8 @@ fi
 if $_has_fzf
 	then
 	# fzf history search and completion of files/directories
-	source ~/.zsh_plugins/key-bindings.zsh
-	source ~/.zsh_plugins/completion.zsh
+	source /usr/share/fzf/key-bindings.zsh
+	source /usr/share/fzf/completion.zsh
 	# override completion with ** to use fd instead of find
 	# from https://github.com/junegunn/fzf#settings
 	_fzf_compgen_path() {

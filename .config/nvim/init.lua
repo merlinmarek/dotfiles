@@ -110,7 +110,8 @@ require("packer").startup(function(use)
   use "junegunn/fzf.vim"
   use "justinmk/vim-dirvish"
   use "evanleck/vim-svelte"
-  use { "nvim-treesitter/nvim-treesitter", branch = "0.5-compat", run = ":TSUpdate" }
+  use { 'iamcco/markdown-preview.nvim', run = function() vim.fn["mkdp#util#install"]() end, }
+  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
   use { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter', }
   use { 'nvim-treesitter/playground', after = 'nvim-treesitter', }
   use "zivyangll/git-blame.vim"

@@ -1,5 +1,5 @@
 [Configuration]
-FontName=DroidSansMono Nerd Font Mono 16
+FontName=SauceCodePro Nerd Font 16
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
 MiscBellUrgent=FALSE
@@ -35,5 +35,5 @@ ColorPalette=#1c1c1c;#af5f5f;#5f875f;#87875f;#5f87af;#5f5f87;#5f8787;#6c6c6c;#44
 TabActivityColor=#ff0000
 TitleMode=TERMINAL_TITLE_REPLACE
 ScrollingUnlimited=TRUE
-ScrollingOnOutput=FALSE
+MiscRightClickAction=TERMINAL_RIGHT_CLICK_ACTION_CONTEXT_MENU
 

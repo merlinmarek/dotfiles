@@ -218,7 +218,10 @@ read_stdin_or_clip() {
 export EDITOR=nvim
 export MANPAGER='nvim +Man!'
 export GOPATH=$HOME/.go
-export PATH=$HOME/.bin:$GOPATH/bin:$HOME/.cargo/bin:$HOME/.node/bin:$HOME/.pub-cache/bin:$HOME/.local/bin:$PATH
+export DOTNETPATH=$HOME/.dotnet
+export ANDROID_SDK_ROOT=$HOME/.android-sdk
+export ANDROID_HOME=$HOME/.android-sdk
+export PATH=$HOME/.bin:$GOPATH/bin:$DOTNETPATH/tools:$HOME/.cargo/bin:$HOME/.node/bin:$HOME/.pub-cache/bin:$HOME/.local/bin:$PATH
 
 # nice colors for jq
 export JQ_COLORS="1;31:1;31:1;31:1;31:1;32:1;37:1;37"

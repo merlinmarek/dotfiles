@@ -78,7 +78,7 @@ vim.cmd "autocmd VimEnter COMMIT_EDITMSG exec 'norm gg' | startinsert!"
 vim.cmd "autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() == 'n' && getcmdwintype() == '' | checktime | endif"
 
 -- sign column
-vim.cmd "autocmd FileType lua,dart,c,cs,cpp,python,go,rust,vue,css,javascript,typescript,json,yaml,gdscript,svelte setlocal signcolumn=yes"
+vim.cmd "autocmd FileType lua,dart,c,cs,cpp,python,go,rust,vue,css,php,javascript,typescript,json,yaml,gdscript,svelte setlocal signcolumn=yes"
 
 -- whitespace settings
 vim.cmd "autocmd FileType cs,rust,java,nginx,cmake                                                                setlocal ts=4 et tw=80"
@@ -120,6 +120,7 @@ end)
 
 -- commentary
 vim.cmd "autocmd FileType c,cpp,cs setlocal commentstring=//%s"
+vim.cmd "autocmd FileType terraform setlocal commentstring=#%s"
 
 -- create qr code from selection
 vim.cmd "xnoremap <leader>sq :w !qrencode -o - <bar> feh - &<bslash>!<c-b>silent<space><cr>:redraw!<cr>"
@@ -129,6 +130,7 @@ vim.cmd "inoremap <expr> <tab> !pumvisible() ? \"\\<tab>\" : \"\\<c-y>\""
 vim.cmd "inoremap <expr> <cr> !pumvisible() ? \"\\<cr>\" : \"\\<c-y>\""
 vim.cmd "inoremap <silent><expr> <c-space> coc#refresh()"
 vim.cmd "nmap <silent> gd <Plug>(coc-definition)"
+vim.cmd "nmap <silent> gi <Plug>(coc-implementation)"
 vim.cmd "nmap <silent> gr <Plug>(coc-references)"
 vim.cmd "nmap <silent> gy <Plug>(coc-type-definition)"
 vim.cmd "nmap <silent> ge <Plug>(coc-diagnostic-prev)"

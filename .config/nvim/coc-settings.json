@@ -1,4 +1,6 @@
 {
+  "volar.takeOverMode.enabled": true,
+  "tsserver.enable": false,
   "snippets.priority": 1000,
   "snippets.userSnippetsDirectory": "~/.snippets",
   "diagnostic.refreshOnInsertMode": false,
@@ -14,10 +16,12 @@
   "diagnostic.warningSign": ">>",
   "coc.preferences.extensionUpdateCheck": "never",
   "coc.preferences.formatOnSaveFiletypes": [
+    "sql",
     "dart",
     "html",
     "json",
     "go",
+    "css",
     "c",
     "cpp",
     "python",
@@ -25,7 +29,9 @@
     "vue",
     "javascript",
     "typescript",
-    "svelte"
+    "svelte",
+    "yaml",
+    "php"
   ],
   "go.goplsOptions": {
     "gofumpt": true
@@ -73,10 +79,28 @@
         "cacheDirectory": "/tmp/ccls"
       }
     },
+    "csharp-ls": {
+      "command": "csharp-ls",
+      "filetypes": ["cs"],
+      "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"]
+    },
     "godot": {
       "host": "127.0.0.1",
       "filetypes": ["gdscript"],
       "port": 6008
+    },
+    "golangci-lint-languageserver": {
+      "command": "golangci-lint-langserver",
+      "filetypes": ["godisabled"],
+      "initializationOptions": {
+        "command": [
+          "golangci-lint",
+          "run",
+          "--out-format",
+          "json",
+          "--issues-exit-code=1"
+        ]
+      }
     }
   },
   "svelte.enable-ts-plugin": true

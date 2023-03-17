@@ -57,7 +57,7 @@ xkb_symbols "basic" {
 
     key.type = "THREE_LEVEL";
 
-    key <AD01> { [ q,          Q,          EuroSign    ] };
+    key <AD01> { [ q,          Q,          EuroSign     ] };
     key <AD02> { [ w,          W,          backslash    ] };
     key <AD03> { [ e,          E,          bracketleft  ] };
     key <AD04> { [ r,          R,          bracketright ] };
@@ -70,7 +70,7 @@ xkb_symbols "basic" {
     key <AD11> { [ udiaeresis, Udiaeresis, at           ] };
     key <AD12> { [ backslash,  backslash,  backslash    ] };
 
-    key <AC01> { [ a,          A,          section  ] };
+    key <AC01> { [ a,          A,          section    ] };
     key <AC02> { [ s,          S,          slash      ] };
     key <AC03> { [ d,          D,          braceleft  ] };
     key <AC04> { [ f,          F,          braceright ] };

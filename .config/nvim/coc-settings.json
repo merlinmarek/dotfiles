@@ -21,6 +21,7 @@
     "html",
     "json",
     "go",
+    "lua",
     "css",
     "c",
     "cpp",
@@ -70,6 +71,7 @@
     "typeParameter": "\uf278",
     "default": "\uf29c"
   },
+  "Lua.diagnostics.globals": ["vim"],
   "languageserver": {
     "ccls": {
       "command": "ccls",

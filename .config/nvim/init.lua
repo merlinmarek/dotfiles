@@ -38,11 +38,11 @@ keymap("n", "<leader>ve", ":edit ~/.config/nvim/init.lua<cr>", noremap)
 keymap("n", "<leader>w", ":write<cr>", noremap)
 keymap("n", "<leader>q", ":quit<cr>", noremap)
 keymap("n", "<leader>x", ":write | quit<cr>", noremap)
-keymap("n", "<leader>j", ":nohlsearch<cr>", noremap)            -- remove search highlighting
-keymap("n", "<leader><leader>", "<c-^>", noremap)               -- switch to last buffer
-keymap("n", "<leader>s", ":%s/\\s\\+$//e<cr>", noremap)         -- remove trailing whitespace
-keymap("i", "<c-l>", "<esc>:lua go_insert_err()<cr>", noremap)  -- insert golang return err template
-keymap("n", "<leader>k", ":source %<cr>", noremap)              -- eval current file
+keymap("n", "<leader>j", ":nohlsearch<cr>", noremap)           -- remove search highlighting
+keymap("n", "<leader><leader>", "<c-^>", noremap)              -- switch to last buffer
+keymap("n", "<leader>s", ":%s/\\s\\+$//e<cr>", noremap)        -- remove trailing whitespace
+keymap("i", "<c-l>", "<esc>:lua go_insert_err()<cr>", noremap) -- insert golang return err template
+keymap("n", "<leader>k", ":source %<cr>", noremap)             -- eval current file
 
 -- move on visual lines
 keymap("x", "j", "gj", noremap)
@@ -177,6 +177,8 @@ require "nvim-treesitter.configs".setup {
 -- easy-align
 keymap("x", "ga", "<plug>(EasyAlign)", {})
 keymap("n", "ga", "<plug>(EasyAlign)", {})
+
+keymap("n", "gh", ":TSHighlightCapturesUnderCursor<cr>", noremap)
 
 require "goerr"
 

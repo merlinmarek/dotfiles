@@ -20,14 +20,14 @@ if &background ==# "dark"
   hi Constant ctermbg=NONE ctermfg=red cterm=NONE
   hi Error ctermbg=NONE ctermfg=darkred cterm=reverse
   hi SignError ctermbg=black ctermfg=red cterm=NONE
-  hi Identifier ctermbg=NONE ctermfg=darkblue cterm=NONE
+  hi Identifier ctermbg=NONE ctermfg=NONE cterm=NONE
   hi Ignore ctermbg=NONE ctermfg=NONE cterm=NONE
   hi PreProc ctermbg=NONE ctermfg=darkcyan cterm=NONE
   hi Special ctermbg=NONE ctermfg=blue cterm=NONE
   hi Statement ctermbg=NONE ctermfg=blue cterm=NONE
   hi String ctermbg=NONE ctermfg=green cterm=NONE
   hi Todo ctermbg=NONE ctermfg=NONE cterm=reverse
-  hi Type ctermbg=NONE ctermfg=blue cterm=NONE
+  hi Type ctermbg=NONE ctermfg=NONE cterm=NONE
   hi Underlined ctermbg=NONE ctermfg=NONE cterm=underline
   hi Pmenu ctermbg=black ctermfg=lightgrey cterm=NONE
   hi PmenuSbar ctermbg=darkgrey ctermfg=NONE cterm=NONE
@@ -50,6 +50,7 @@ if &background ==# "dark"
   hi helpLeadBlank ctermbg=NONE ctermfg=NONE cterm=NONE
   hi helpNormal ctermbg=NONE ctermfg=NONE cterm=NONE
   hi StatusLine ctermbg=black ctermfg=darkgrey cterm=NONE
+  hi @constant.builtin ctermbg=NONE ctermfg=red cterm=NONE
   hi StatusLineNC ctermbg=black ctermfg=lightgrey cterm=NONE
   hi StatusLineTerm ctermbg=black ctermfg=lightgrey cterm=NONE
   hi StatusLineTermNC ctermbg=black ctermfg=lightgrey cterm=NONE
@@ -75,7 +76,7 @@ if &background ==# "dark"
   hi SpellRare ctermbg=NONE ctermfg=red cterm=undercurl guisp=#ff8700
   hi ColorColumn ctermbg=black ctermfg=NONE cterm=NONE
 else
-  hi Normal ctermbg=NONE ctermfg=black cterm=NONE
+  hi Normal ctermbg=NONE ctermfg=NONE cterm=NONE
   hi NonText ctermbg=NONE ctermfg=darkgrey cterm=NONE
   hi EndOfBuffer ctermbg=NONE ctermfg=darkgrey cterm=NONE
   hi LineNr ctermbg=NONE ctermfg=darkgrey cterm=NONE
@@ -146,15 +147,16 @@ else
   hi CStructure ctermbg=NONE ctermfg=red cterm=NONE
   hi CType ctermbg=NONE ctermfg=blue cterm=NONE
 endif
+hi link Delimiter Normal
 hi link Terminal Normal
 hi link Number Constant
 hi link CursorIM Cursor
 hi link Boolean Constant
 hi link Character Constant
+hi link @type.builtin Statement
 hi link Conditional Statement
 hi link Debug Special
 hi link Define PreProc
-hi link Delimiter Special
 hi link Exception Statement
 hi link Float Number
 hi link HelpCommand Statement
@@ -164,7 +166,7 @@ hi link Keyword Statement
 hi link Label Statement
 hi link Macro PreProc
 hi link Number Constant
-hi link Operator Statement
+hi link Operator Normal
 hi link PreCondit PreProc
 hi link Repeat Statement
 hi link SpecialChar Special

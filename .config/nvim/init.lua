@@ -78,7 +78,7 @@ vim.cmd "autocmd VimEnter COMMIT_EDITMSG exec 'norm gg' | startinsert!"
 vim.cmd "autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() == 'n' && getcmdwintype() == '' | checktime | endif"
 
 -- sign column
-vim.cmd "autocmd FileType lua,dart,c,cs,cpp,python,go,rust,vue,css,php,javascript,typescript,json,yaml,gdscript,svelte setlocal signcolumn=yes"
+vim.cmd "autocmd FileType lua,dart,c,cs,cpp,python,java,go,rust,vue,css,php,javascript,typescript,json,yaml,gdscript,svelte setlocal signcolumn=yes"
 
 -- whitespace settings
 vim.cmd "autocmd FileType cs,rust,java,nginx,cmake                                                                setlocal ts=4 et tw=80"

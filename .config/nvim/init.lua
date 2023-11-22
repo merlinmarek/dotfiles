@@ -56,6 +56,8 @@ keymap("n", "<c-k>", "<c-w>k", noremap)
 keymap("n", "<c-l>", "<c-w>l", noremap)
 keymap("n", "<c-h>", "<c-w>h", noremap)
 
+keymap("v", "gd", "c</div><esc>kpO<div class=\"\"><esc>2ha", noremap)
+
 -- go to first non-whitespace character when pressing 0
 keymap("n", "0", "^", noremap)
 keymap("n", "^", "0", noremap)
@@ -78,17 +80,16 @@ vim.cmd "autocmd VimEnter COMMIT_EDITMSG exec 'norm gg' | startinsert!"
 vim.cmd "autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() == 'n' && getcmdwintype() == '' | checktime | endif"
 
 -- sign column
-vim.cmd "autocmd FileType lua,dart,c,cs,cpp,python,java,go,rust,vue,css,php,javascript,typescript,json,yaml,gdscript,svelte setlocal signcolumn=yes"
+vim.cmd "autocmd FileType prisma,lua,dart,c,cs,cpp,python,java,go,rust,vue,css,php,javascript,typescript,typescriptreact,json,yaml,gdscript,svelte setlocal signcolumn=yes"
 
 -- whitespace settings
-vim.cmd "autocmd FileType cs,rust,java,nginx,cmake                                                                setlocal ts=4 et tw=80"
-vim.cmd "autocmd FileType c,cpp,dart,sshconfig,css,html,json,yaml,vim,bib,vue,javascript,lua,dockerfile,svelte    setlocal ts=2 et tw=80"
-vim.cmd "autocmd FileType tex,plaintex,rust,java,nginx,cmake                                                      setlocal ts=4 et tw=80"
-vim.cmd "autocmd FileType zsh                                                                                     setlocal ts=4 noet"
-vim.cmd "autocmd FileType gdscript                                                                                setlocal ts=2 noet"
-vim.cmd "autocmd FileType go                                                                                      setlocal ts=4 noet tw=80"
-vim.cmd "autocmd FileType python                                                                                  setlocal ts=4 et"
-vim.cmd "autocmd FileType asm                                                                                     setlocal ts=8 noet"
+vim.cmd "autocmd FileType cs,rust,java,nginx,cmake                                                                        setlocal ts=4 et tw=80"
+vim.cmd "autocmd FileType prisma,asm,c,cpp,dart,sshconfig,css,html,json,yaml,vim,bib,vue,javascript,lua,dockerfile,svelte setlocal ts=2 et tw=80"
+vim.cmd "autocmd FileType tex,plaintex,rust,java,nginx,cmake                                                              setlocal ts=4 et tw=80"
+vim.cmd "autocmd FileType zsh                                                                                             setlocal ts=4 noet"
+vim.cmd "autocmd FileType gdscript                                                                                        setlocal ts=2 noet"
+vim.cmd "autocmd FileType go                                                                                              setlocal ts=4 noet tw=80"
+vim.cmd "autocmd FileType python                                                                                          setlocal ts=4 et"
 
 -- fold settings
 vim.cmd "setlocal foldlevel=1 foldnestmax=1 foldmethod=syntax"
@@ -105,15 +106,17 @@ end
 -- load plugins
 require("packer").startup(function(use)
   use "wbthomason/packer.nvim"
+  use "prisma/vim-prisma"
   use "tpope/vim-commentary"
   use "junegunn/vim-easy-align"
   use "junegunn/fzf.vim"
   use "justinmk/vim-dirvish"
   use "evanleck/vim-svelte"
   use { 'iamcco/markdown-preview.nvim', run = function() vim.fn["mkdp#util#install"]() end, }
-  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
+  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate", }
+  use 'JoosepAlviste/nvim-ts-context-commentstring'
   use { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter', }
-  use { 'nvim-treesitter/playground', after = 'nvim-treesitter', }
+  use { 'nvim-treesitter/playground' }
   use "zivyangll/git-blame.vim"
   use { "neoclide/coc.nvim", branch = "release" }
 end)
@@ -138,6 +141,7 @@ vim.cmd "nmap <leader>r <Plug>(coc-rename)"
 vim.cmd "nmap <leader>a <Plug>(coc-codeaction)"
 vim.cmd "nmap <silent> <leader>e :call CocAction('doHover')<cr>"
 vim.cmd "autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')"
+vim.cmd "autocmd BufWritePre *.prisma :silent call CocActionAsync('format')"
 
 -- dirvish
 vim.api.nvim_command("autocmd FileType dirvish nmap <buffer> <esc> gq")
@@ -171,8 +175,15 @@ require "nvim-treesitter.configs".setup {
     "lua",
     "javascript",
     "typescript",
+    "vue",
+  },
+  context_commentstring = {
+    enable = true,
   },
 }
+
+-- abbreviations
+vim.cmd("iabbrev rud refactor: update dependencies")
 
 -- easy-align
 keymap("x", "ga", "<plug>(EasyAlign)", {})

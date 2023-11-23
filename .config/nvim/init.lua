@@ -110,6 +110,8 @@ require("packer").startup(function(use)
   use "tpope/vim-commentary"
   use "junegunn/vim-easy-align"
   use "junegunn/fzf.vim"
+  use "github/copilot.vim"
+  use { "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } }
   use "justinmk/vim-dirvish"
   use "evanleck/vim-svelte"
   use { 'iamcco/markdown-preview.nvim', run = function() vim.fn["mkdp#util#install"]() end, }
@@ -148,11 +150,30 @@ vim.api.nvim_command("autocmd FileType dirvish nmap <buffer> <esc> gq")
 vim.api.nvim_command("autocmd FileType dirvish nmap <buffer> <leader>q gq")
 
 -- fzf
-keymap("n", "<leader>f", ":Files<cr>", noremap)
-keymap("n", "<leader>b", ":Buffers<cr>", noremap)
-keymap("n", "<leader>g", ":Rg<cr>", noremap)
-keymap("n", "<leader>h", ":History<cr>", noremap)
-keymap("i", "<c-f>", "<plug>(fzf-complete-path)", {})
+-- keymap("n", "<leader>f", ":Files<cr>", noremap)
+-- keymap("n", "<leader>b", ":Buffers<cr>", noremap)
+-- keymap("n", "<leader>g", ":Rg<cr>", noremap)
+-- keymap("n", "<leader>h", ":History<cr>", noremap)
+-- keymap("i", "<c-f>", "<plug>(fzf-complete-path)", {})
+
+-- telescope
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>f', builtin.find_files, {})
+vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>b', builtin.buffers, {})
+vim.keymap.set('n', '<leader>h', builtin.oldfiles, {})
+vim.keymap.set('n', '<leader>c', builtin.builtin, {})
+
+-- close telescope pickers with escape
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<esc>"] = require('telescope.actions').close,
+      },
+    },
+  },
+}
 
 -- treesitter
 require "nvim-treesitter.configs".setup {
@@ -177,7 +198,7 @@ require "nvim-treesitter.configs".setup {
     "typescript",
     "vue",
   },
-  context_commentstring = {
+  ts_context_commentstring = {
     enable = true,
   },
 }

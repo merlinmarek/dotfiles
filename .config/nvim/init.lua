@@ -22,11 +22,11 @@ vim.opt.laststatus = 1            -- only show statusline if there are multiple 
 vim.opt.inccommand = "nosplit"    -- highlight matched words when typing substitution commands
 vim.opt.scrolloff = 5             -- keep lines above and below the cursor while scrolling
 vim.opt.foldlevelstart = 99       -- expand all folds on start
-vim.opt.updatetime = 100          -- check if the file changed from outside more often
+vim.opt.updatetime = 100          -- check if the file has been changed externally more often
 
 vim.g.syntax = false              -- disable regex based syntax highlighting, use treesitter instead
 
-vim.cmd "colorscheme 16term"
+vim.cmd.colorscheme("16term")
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "

@@ -196,6 +196,11 @@ require("lazy").setup({
   },
 
   {
+    "ray-x/lsp_signature.nvim",
+    event = "VeryLazy",
+  },
+
+  {
     -- provide autocompletion
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -474,6 +479,12 @@ local servers = {
     },
   },
 }
+
+require("lsp_signature").setup({
+  hint_enable = false,      -- virtual hint enable
+  hi_parameter = "Keyword", -- how your parameter will be highlight
+})
+
 
 -- setup neovim lua configuration
 require("neodev").setup()

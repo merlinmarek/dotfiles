@@ -408,6 +408,11 @@ vim.defer_fn(function()
   })
 end, 0)
 
+-- do not use virtual text for diagnostics
+vim.diagnostic.config({
+  virtual_text = false,
+})
+
 --  this function gets run when an lsp connects to a particular buffer
 local on_attach = function(_, bufnr)
   -- In this case, we create a function that lets us more easily define mappings specific

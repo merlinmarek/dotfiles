@@ -10,10 +10,10 @@ vim.opt.smartcase = true          -- ... except when capital letters are used
 vim.opt.swapfile = false          -- do not create swapfiles
 vim.opt.undofile = true           -- create undo files
 vim.opt.pumheight = 20            -- use 20 lines in the popupmenu at maximum
-vim.opt.tabstop = 2               -- default, gets overriden for specific file types
+vim.opt.expandtab = true          -- insert spaces when pressing tab
+vim.opt.tabstop = 2               -- use 2 spaces for a tab
 vim.opt.shiftwidth = 0            -- use whatever tabstop is
 vim.opt.softtabstop = -1          -- use whatever shiftwidth is
-vim.opt.expandtab = true          -- insert spaces when pressing tab
 vim.opt.splitright = true         -- more intuitive split positions
 vim.opt.splitbelow = true         -- more intuitive split positions
 vim.opt.mouse = ""                -- allow select and copy from vim via mouse
@@ -23,196 +23,483 @@ vim.opt.inccommand = "nosplit"    -- highlight matched words when typing substit
 vim.opt.scrolloff = 5             -- keep lines above and below the cursor while scrolling
 vim.opt.foldlevelstart = 99       -- expand all folds on start
 vim.opt.updatetime = 100          -- check if the file has been changed externally more often
-
+vim.opt.signcolumn = "yes"        -- show sign column by default
 vim.g.syntax = false              -- disable regex based syntax highlighting, use treesitter instead
 
-vim.cmd.colorscheme("16term")
+-- disable unused builtin plugins
+vim.g.loaded_gzip = 1
+vim.g.loaded_zip = 1
+vim.g.loaded_zipPlugin = 1
+vim.g.loaded_tar = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_getscript = 1
+vim.g.loaded_getscriptPlugin = 1
+vim.g.loaded_vimball = 1
+vim.g.loaded_vimballPlugin = 1
+vim.g.loaded_2html_plugin = 1
+vim.g.loaded_matchit = 1
+vim.g.loaded_matchparen = 1
+vim.g.loaded_logiPat = 1
+vim.g.loaded_rrhelper = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrwSettings = 1
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-local noremap = { noremap = true }
-local keymap = vim.api.nvim_set_keymap
-keymap("n", "<space>", "", {})
-keymap("n", "<leader>ve", ":edit ~/.config/nvim/init.lua<cr>", noremap)
-keymap("n", "<leader>w", ":write<cr>", noremap)
-keymap("n", "<leader>q", ":quit<cr>", noremap)
-keymap("n", "<leader>x", ":write | quit<cr>", noremap)
-keymap("n", "<leader>j", ":nohlsearch<cr>", noremap)           -- remove search highlighting
-keymap("n", "<leader><leader>", "<c-^>", noremap)              -- switch to last buffer
-keymap("n", "<leader>s", ":%s/\\s\\+$//e<cr>", noremap)        -- remove trailing whitespace
-keymap("i", "<c-l>", "<esc>:lua go_insert_err()<cr>", noremap) -- insert golang return err template
-keymap("n", "<leader>k", ":source %<cr>", noremap)             -- eval current file
+vim.cmd.colorscheme("16term")
+
+-- install package manager
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  {
+    -- provide ai code completions
+    "github/copilot.vim",
+  },
+  {
+    -- browse files
+    "justinmk/vim-dirvish",
+  },
+  {
+    -- format files
+    "stevearc/conform.nvim",
+    formatters_by_ft = {
+      lua = { "stylua" },
+    },
+    format_on_save = {
+      timeout_ms = 500,
+      lsp_fallback = true,
+    },
+  },
+  {
+    -- preview markdown files
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+  },
+  {
+    -- set the commentstring based on location in the file
+    "JoosepAlviste/nvim-ts-context-commentstring",
+  },
+  {
+    -- nvim lsp client configs
+    "neovim/nvim-lspconfig",
+
+    config = function()
+      -- Switch for controlling whether you want autoformatting.
+      --  Use :KickstartFormatToggle to toggle autoformatting on or off
+      local format_is_enabled = true
+      vim.api.nvim_create_user_command('KickstartFormatToggle', function()
+        format_is_enabled = not format_is_enabled
+        print('Setting autoformatting to: ' .. tostring(format_is_enabled))
+      end, {})
+
+      -- Create an augroup that is used for managing our formatting autocmds.
+      --      We need one augroup per client to make sure that multiple clients
+      --      can attach to the same buffer without interfering with each other.
+      local _augroups = {}
+      local get_augroup = function(client)
+        if not _augroups[client.id] then
+          local group_name = 'kickstart-lsp-format-' .. client.name
+          local id = vim.api.nvim_create_augroup(group_name, { clear = true })
+          _augroups[client.id] = id
+        end
+
+        return _augroups[client.id]
+      end
+
+      -- Whenever an LSP attaches to a buffer, we will run this function.
+      --
+      -- See `:help LspAttach` for more information about this autocmd event.
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('kickstart-lsp-attach-format', { clear = true }),
+        -- This is where we attach the autoformatting for reasonable clients
+        callback = function(args)
+          local client_id = args.data.client_id
+          local client = vim.lsp.get_client_by_id(client_id)
+          local bufnr = args.buf
+
+          -- Only attach to clients that support document formatting
+          if not client.server_capabilities.documentFormattingProvider then
+            return
+          end
+
+          -- Tsserver usually works poorly. Sorry you work with bad languages
+          -- You can remove this line if you know what you're doing :)
+          if client.name == 'tsserver' then
+            return
+          end
+
+          -- Create an autocmd that will run *before* we save the buffer.
+          --  Run the formatting command for the LSP that has just attached.
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            group = get_augroup(client),
+            buffer = bufnr,
+            callback = function()
+              if not format_is_enabled then
+                return
+              end
+
+              vim.lsp.buf.format {
+                async = false,
+                filter = function(c)
+                  return c.id == client.id
+                end,
+              }
+            end,
+          })
+        end,
+      })
+    end,
+    dependencies = {
+      -- automatically install language servers to stdpath for neovim
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+
+      -- provide completion for nvim lua api
+      "folke/neodev.nvim",
+    },
+  },
+
+  {
+    -- provide autocompletion
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      -- snippet engine and corresponding nvim-cmp source
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+
+      -- add compltions from lsp
+      "hrsh7th/cmp-nvim-lsp",
+    },
+  },
+
+  {
+    -- "gc" to comment visual regions/lines
+    "numToStr/Comment.nvim",
+    opts = {},
+  },
+
+  {
+    -- fuzzy finder (files, lsp, etc)
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.4",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+        cond = function()
+          return vim.fn.executable("make") == 1
+        end,
+      },
+    },
+  },
+
+  {
+    -- highlight, edit, and navigate code
+    "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects",
+    },
+    build = ":TSUpdate",
+  },
+}, {})
+
+-- keymaps
+local nore = { noremap = true }
+local k = vim.keymap.set
+
+-- general
+k({ "n", "v" }, "<space>", "<nop>", { silent = true })
+k("n", "<leader>ve", ":edit $MYVIMRC<cr>", nore)
+k("n", "<leader>w", ":write<cr>", nore)
+k("n", "<leader>q", ":quit<cr>", nore)
+k("n", "<leader>x", ":write | quit<cr>", nore)
+k("n", "<leader><leader>", "<c-^>", nore) -- switch to previous buffer
+
+-- lsp
+k("n", "ge", vim.diagnostic.goto_prev, nore)
+k("n", "gE", vim.diagnostic.goto_next, nore)
+k("n", "<leader>e", vim.diagnostic.open_float, nore)
+k("n", "<leader>d", vim.diagnostic.setloclist, nore)
+k("n", "<leader>j", ":nohlsearch<cr>", nore) -- remove current search highlighting
 
 -- move on visual lines
-keymap("x", "j", "gj", noremap)
-keymap("x", "k", "gk", noremap)
-keymap("n", "j", "gj", noremap)
-keymap("n", "k", "gk", noremap)
+k({ "n", "x" }, "k", "gk", { silent = true })
+k({ "n", "x" }, "j", "gj", { silent = true })
 
 -- easier movement between windows
-keymap("n", "<c-j>", "<c-w>j", noremap)
-keymap("n", "<c-k>", "<c-w>k", noremap)
-keymap("n", "<c-l>", "<c-w>l", noremap)
-keymap("n", "<c-h>", "<c-w>h", noremap)
-
-keymap("v", "gd", "c</div><esc>kpO<div class=\"\"><esc>2ha", noremap)
+k("n", "<c-j>", "<c-w>j", nore)
+k("n", "<c-k>", "<c-w>k", nore)
+k("n", "<c-l>", "<c-w>l", nore)
+k("n", "<c-h>", "<c-w>h", nore)
 
 -- go to first non-whitespace character when pressing 0
-keymap("n", "0", "^", noremap)
-keymap("n", "^", "0", noremap)
+k("n", "0", "^", nore)
+k("n", "^", "0", nore)
 
--- return to the last edited line when reopening a file
-vim.cmd "autocmd BufReadPost * if line(\"'\\\"\") > 0 && line (\"'\\\"\") <= line(\"$\") | execute 'normal! g`\"zvzz' | endif"
+-- easy-align
+k("x", "ga", "<plug>(EasyAlign)", {})
+k("n", "ga", "<plug>(EasyAlign)", {})
 
--- do not yank when pasting over visual selection
-vim.cmd "xnoremap <expr> p '\"_d\"'.v:register.'P'"
-
--- open terminal with <leader>t
-vim.cmd "nnoremap <leader>t :let $VIM_DIR=expand('%:p:h')<cr>:split \\| terminal<cr>cd $VIM_DIR<cr>c<cr>"
-vim.cmd "autocmd TermOpen * startinsert \" automatically start insert mode when opening term"
-vim.cmd "autocmd TermOpen * setlocal listchars= nonumber norelativenumber signcolumn=no laststatus=0 nospell"
-
--- automatically start in insert mode for git commit messages
-vim.cmd "autocmd VimEnter COMMIT_EDITMSG exec 'norm gg' | startinsert!"
-
--- autoread files when they change outside the editor
-vim.cmd "autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() == 'n' && getcmdwintype() == '' | checktime | endif"
-
--- sign column
-vim.cmd "autocmd FileType prisma,lua,dart,c,cs,cpp,python,java,go,rust,vue,css,php,javascript,typescript,typescriptreact,json,yaml,gdscript,svelte setlocal signcolumn=yes"
-
--- whitespace settings
-vim.cmd "autocmd FileType cs,rust,java,nginx,cmake                                                                        setlocal ts=4 et tw=80"
-vim.cmd "autocmd FileType prisma,asm,c,cpp,dart,sshconfig,css,html,json,yaml,vim,bib,vue,javascript,lua,dockerfile,svelte setlocal ts=2 et tw=80"
-vim.cmd "autocmd FileType tex,plaintex,rust,java,nginx,cmake                                                              setlocal ts=4 et tw=80"
-vim.cmd "autocmd FileType zsh                                                                                             setlocal ts=4 noet"
-vim.cmd "autocmd FileType gdscript                                                                                        setlocal ts=2 noet"
-vim.cmd "autocmd FileType go                                                                                              setlocal ts=4 noet tw=80"
-vim.cmd "autocmd FileType python                                                                                          setlocal ts=4 et"
-
--- fold settings
-vim.cmd "setlocal foldlevel=1 foldnestmax=1 foldmethod=syntax"
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-
--- ensure that packer is installed
-local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.system({ 'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path })
-  vim.api.nvim_command 'packadd packer.nvim'
-end
-
--- load plugins
-require("packer").startup(function(use)
-  use "wbthomason/packer.nvim"
-  use "prisma/vim-prisma"
-  use "tpope/vim-commentary"
-  use "junegunn/vim-easy-align"
-  use "junegunn/fzf.vim"
-  use "github/copilot.vim"
-  -- use { "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } }
-  use "justinmk/vim-dirvish"
-  use "evanleck/vim-svelte"
-  use { 'iamcco/markdown-preview.nvim', run = function() vim.fn["mkdp#util#install"]() end, }
-  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate", }
-  use 'JoosepAlviste/nvim-ts-context-commentstring'
-  use { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter', }
-  use { 'nvim-treesitter/playground' }
-  use "zivyangll/git-blame.vim"
-  use { "neoclide/coc.nvim", branch = "release" }
-end)
-
--- commentary
-vim.cmd "autocmd FileType c,cpp,cs setlocal commentstring=//%s"
-vim.cmd "autocmd FileType terraform setlocal commentstring=#%s"
-
--- create qr code from selection
-vim.cmd "xnoremap <leader>sq :w !qrencode -o - <bar> feh - &<bslash>!<c-b>silent<space><cr>:redraw!<cr>"
-
--- coc
-vim.cmd "inoremap <expr> <tab> !pumvisible() ? \"\\<tab>\" : \"\\<c-y>\""
-vim.cmd "inoremap <expr> <cr> !pumvisible() ? \"\\<cr>\" : \"\\<c-y>\""
-vim.cmd "inoremap <silent><expr> <c-space> coc#refresh()"
-vim.cmd "nmap <silent> gd <Plug>(coc-definition)"
-vim.cmd "nmap <silent> gi <Plug>(coc-implementation)"
-vim.cmd "nmap <silent> gr <Plug>(coc-references)"
-vim.cmd "nmap <silent> gy <Plug>(coc-type-definition)"
-vim.cmd "nmap <silent> ge <Plug>(coc-diagnostic-prev)"
-vim.cmd "nmap <leader>r <Plug>(coc-rename)"
-vim.cmd "nmap <leader>a <Plug>(coc-codeaction)"
-vim.cmd "nmap <silent> <leader>e :call CocAction('doHover')<cr>"
-vim.cmd "autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')"
-vim.cmd "autocmd BufWritePre *.prisma :silent call CocActionAsync('format')"
+-- show treesitter hl group
+k("n", "gh", ":TSHighlightCapturesUnderCursor<cr>", nore)
 
 -- dirvish
 vim.api.nvim_command("autocmd FileType dirvish nmap <buffer> <esc> gq")
 vim.api.nvim_command("autocmd FileType dirvish nmap <buffer> <leader>q gq")
 
--- fzf
-keymap("n", "<leader>f", ":Files<cr>", noremap)
-keymap("n", "<leader>b", ":Buffers<cr>", noremap)
-keymap("n", "<leader>g", ":Rg<cr>", noremap)
-keymap("n", "<leader>h", ":History<cr>", noremap)
-keymap("i", "<c-f>", "<plug>(fzf-complete-path)", {})
+-- do not yank when pasting over visual selection
+vim.cmd("xnoremap <expr> p '\"_d\"'.v:register.'P'")
 
--- telescope
--- local builtin = require('telescope.builtin')
--- vim.keymap.set('n', '<leader>f', builtin.find_files, {})
--- vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
--- vim.keymap.set('n', '<leader>b', builtin.buffers, {})
--- vim.keymap.set('n', '<leader>h', builtin.oldfiles, {})
--- vim.keymap.set('n', '<leader>c', builtin.builtin, {})
+-- return to the last edited line when reopening a file
+vim.api.nvim_create_autocmd("BufRead", {
+  callback = function(opts)
+    vim.api.nvim_create_autocmd("BufWinEnter", {
+      once = true,
+      buffer = opts.buf,
+      callback = function()
+        local ft = vim.bo[opts.buf].filetype
+        local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+        if
+            not (ft:match("commit") and ft:match("rebase"))
+            and last_known_line > 1
+            and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+        then
+          vim.api.nvim_feedkeys([[g`"]], "nx", false)
+        end
+      end,
+    })
+  end,
+})
 
--- close telescope pickers with escape
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ["<esc>"] = require('telescope.actions').close,
-      },
-    },
-  },
-}
+-- open terminal with <leader>t
+vim.cmd("nnoremap <leader>t :let $VIM_DIR=expand('%:p:h')<cr>:split \\| terminal<cr>cd $VIM_DIR<cr>c<cr>")
+vim.cmd('autocmd TermOpen * startinsert " automatically start insert mode when opening term')
+vim.cmd("autocmd TermOpen * setlocal listchars= nonumber norelativenumber signcolumn=no laststatus=0 nospell")
 
--- treesitter
-require "nvim-treesitter.configs".setup {
-  highlight = { enable = true },
-  playground = {
-    enabled = true,
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-      },
-    },
-  },
-  ensure_installed = {
-    "go",
-    "lua",
-    "javascript",
-    "typescript",
-    "vue",
-  },
-  ts_context_commentstring = {
-    enable = true,
-  },
-}
+-- automatically start in insert mode for git commit messages
+vim.cmd("autocmd VimEnter COMMIT_EDITMSG exec 'norm gg' | startinsert!")
+
+-- autoread files when they change outside the editor
+vim.cmd(
+  "autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() == 'n' && getcmdwintype() == '' | checktime | endif"
+)
+
+-- create qr code from selection
+vim.cmd("xnoremap <leader>sq :w !qrencode -o - <bar> feh - &<bslash>!<c-b>silent<space><cr>:redraw!<cr>")
+
+-- whitespace settings
+vim.cmd("autocmd FileType cs,tex,plaintex,rust,java,nginx,cmake setlocal ts=4 et tw=80")
+vim.cmd("autocmd FileType zsh                                   setlocal ts=4 noet")
+vim.cmd("autocmd FileType gdscript                              setlocal ts=2 noet")
+vim.cmd("autocmd FileType go                                    setlocal ts=4 noet tw=80")
+vim.cmd("autocmd FileType python                                setlocal ts=4 et")
+
+-- fold settings
+vim.cmd("setlocal foldlevel=1 foldnestmax=1 foldmethod=syntax")
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 -- abbreviations
 vim.cmd("iabbrev rud refactor: update dependencies")
 
--- easy-align
-keymap("x", "ga", "<plug>(EasyAlign)", {})
-keymap("n", "ga", "<plug>(EasyAlign)", {})
+-- :help telescope
+-- :help telescope.setup()
+require("telescope").setup({
+  defaults = {
+    mappings = {
+      i = {
+        ["<esc>"] = require("telescope.actions").close,
+      },
+    },
+  },
+})
 
-keymap("n", "gh", ":TSHighlightCapturesUnderCursor<cr>", noremap)
+-- enable telescope fzf native, if installed
+pcall(require("telescope").load_extension, "fzf")
 
-require "goerr"
+-- Telescope live_grep in git root
+-- Function to find the git root directory based on the current buffer's path
+local function find_git_root()
+  -- Use the current buffer's path as the starting point for the git search
+  local current_file = vim.api.nvim_buf_get_name(0)
+  local current_dir
+  local cwd = vim.fn.getcwd()
+  -- If the buffer is not associated with a file, return nil
+  if current_file == "" then
+    current_dir = cwd
+  else
+    -- Extract the directory from the current file's path
+    current_dir = vim.fn.fnamemodify(current_file, ":h")
+  end
 
--- load local extra settings
-vim.cmd "silent! source ~/.config/nvim/local/settings.vim"
+  -- Find the Git root directory from the current file's path
+  local git_root = vim.fn.systemlist("git -C " .. vim.fn.escape(current_dir, " ") .. " rev-parse --show-toplevel")[1]
+  if vim.v.shell_error ~= 0 then
+    print("Not a git repository. Searching on current working directory")
+    return cwd
+  end
+  return git_root
+end
+
+-- Custom live_grep function to search in git root
+local function live_grep_git_root()
+  local git_root = find_git_root()
+  if git_root then
+    require("telescope.builtin").live_grep({
+      search_dirs = { git_root },
+    })
+  end
+end
+
+vim.api.nvim_create_user_command("LiveGrepGitRoot", live_grep_git_root, {})
+
+-- See `:help telescope.builtin`
+vim.keymap.set("n", "<leader>h", require("telescope.builtin").oldfiles)
+vim.keymap.set("n", "<leader>b", require("telescope.builtin").buffers)
+vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files)
+vim.keymap.set("n", "<leader>g", require("telescope.builtin").live_grep)
+vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics)
+vim.keymap.set("n", "<leader>sr", require("telescope.builtin").resume)
+
+-- :help nvim-treesitter
+-- defer treesitter setup after first render to improve startup time
+vim.defer_fn(function()
+  ---@diagnostic disable-next-line: missing-fields
+  require("nvim-treesitter.configs").setup({
+    textobjects = {
+      select = {
+        enable = true,
+        lookahead = true,
+        keymaps = {
+          ["af"] = "@function.outer",
+          ["if"] = "@function.inner",
+        },
+      },
+    },
+    ensure_installed = {
+      "go",
+      "lua",
+      "javascript",
+      "typescript",
+      "vue",
+    },
+    ts_context_commentstring = {
+      enable = true,
+    },
+  })
+end, 0)
+
+--  this function gets run when an lsp connects to a particular buffer
+local on_attach = function(_, bufnr)
+  -- In this case, we create a function that lets us more easily define mappings specific
+  -- for LSP related items. It sets the mode, buffer and description for us each time.
+  local nmap = function(keys, func, desc)
+    if desc then
+      desc = "LSP: " .. desc
+    end
+
+    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  nmap("<leader>r", vim.lsp.buf.rename)
+  nmap("<leader>a", vim.lsp.buf.code_action)
+  nmap("<leader>e", vim.lsp.buf.hover)
+  nmap("gD", vim.lsp.buf.declaration)
+  nmap("gd", require("telescope.builtin").lsp_definitions)
+  nmap("gr", require("telescope.builtin").lsp_references)
+  nmap("gi", require("telescope.builtin").lsp_implementations)
+  nmap("gt", require("telescope.builtin").lsp_type_definitions)
+end
+
+-- mason-lspconfig requires that these setup functions are called in this order
+-- before setting up the servers.
+require("mason").setup()
+require("mason-lspconfig").setup()
+
+local servers = {
+  gopls = {},
+
+  lua_ls = {
+    Lua = {
+      format = {
+        enable = true,
+        quote_style = "double",
+      },
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  },
+}
+
+-- setup neovim lua configuration
+require("neodev").setup()
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+-- ensure the servers above are installed
+local mason_lspconfig = require("mason-lspconfig")
+
+mason_lspconfig.setup({
+  ensure_installed = vim.tbl_keys(servers),
+})
+
+mason_lspconfig.setup_handlers({
+  function(server_name)
+    require("lspconfig")[server_name].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+    })
+  end,
+})
+
+-- :help cmp
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+require("luasnip.loaders.from_vscode").lazy_load()
+luasnip.config.setup({})
+
+---@diagnostic disable-next-line: missing-fields
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  ---@diagnostic disable-next-line: missing-fields
+  completion = {
+    completeopt = "menu,menuone,noinsert",
+  },
+  mapping = cmp.mapping.preset.insert({
+    ["<CR>"] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    }),
+  }),
+  sources = {
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+  },
+})

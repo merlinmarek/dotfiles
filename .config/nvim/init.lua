@@ -342,6 +342,10 @@ vim.cmd("iabbrev rud refactor: update dependencies")
 -- :help telescope.setup()
 require("telescope").setup({
   defaults = {
+    sorting_strategy = "ascending",
+    layout_config = {
+      prompt_position = "top",
+    },
     mappings = {
       i = {
         ["<esc>"] = require("telescope.actions").close,
@@ -461,6 +465,8 @@ local servers = {
   gopls = {
     gofumpt = true,
   },
+
+  volar = {},
 
   lua_ls = {
     Lua = {

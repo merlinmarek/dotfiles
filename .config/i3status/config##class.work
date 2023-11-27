@@ -18,8 +18,8 @@ order += "tztime time"
 battery 0 {
   format = "%status %percentage"
   status_chr = " "
-  status_bat = "  "
-  status_full = " "
+  status_bat = ""
+  status_full = ""
   integer_battery_capacity = true
   low_threshold = 20
   threshold_type = percentage
@@ -44,17 +44,17 @@ ethernet _first_ {
 }
 
 tztime date {
-        format = "  %d %b"
+        format = " %d %b"
         separator_block_width = 20
 }
 
 tztime time {
-        format = "  %H:%M"
+        format = " %H:%M"
         separator_block_width = 20
 }
 
 memory {
-        format = "  %available"
+        format = " %available"
         separator_block_width = 20
 }
 

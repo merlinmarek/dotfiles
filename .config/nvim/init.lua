@@ -23,7 +23,7 @@ vim.opt.inccommand = "nosplit"    -- highlight matched words when typing substit
 vim.opt.scrolloff = 5             -- keep lines above and below the cursor while scrolling
 vim.opt.foldlevelstart = 99       -- expand all folds on start
 vim.opt.updatetime = 100          -- check if the file has been changed externally more often
-vim.opt.signcolumn = "yes"        -- show sign column by default
+vim.opt.signcolumn = "number"     -- show signs in number column
 vim.g.syntax = false              -- disable regex based syntax highlighting, use treesitter instead
 
 -- disable unused builtin plugins
@@ -48,8 +48,6 @@ vim.g.loaded_netrwSettings = 1
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.cmd.colorscheme("16term")
-
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.go",
   callback = function()
@@ -66,7 +64,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
       end
     end
     vim.lsp.buf.format({ async = false })
-  end
+  end,
 })
 
 -- install package manager
@@ -85,6 +83,16 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
+    -- pretty diagnostics and quickfix
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
+  {
     -- provide ai code completions
     "github/copilot.vim",
   },
@@ -95,13 +103,6 @@ require("lazy").setup({
   {
     -- format files
     "stevearc/conform.nvim",
-    formatters_by_ft = {
-      lua = { "stylua" },
-    },
-    format_on_save = {
-      timeout_ms = 500,
-      lsp_fallback = true,
-    },
   },
   {
     -- preview markdown files
@@ -124,9 +125,9 @@ require("lazy").setup({
       -- Switch for controlling whether you want autoformatting.
       --  Use :KickstartFormatToggle to toggle autoformatting on or off
       local format_is_enabled = true
-      vim.api.nvim_create_user_command('KickstartFormatToggle', function()
+      vim.api.nvim_create_user_command("KickstartFormatToggle", function()
         format_is_enabled = not format_is_enabled
-        print('Setting autoformatting to: ' .. tostring(format_is_enabled))
+        print("Setting autoformatting to: " .. tostring(format_is_enabled))
       end, {})
 
       -- Create an augroup that is used for managing our formatting autocmds.
@@ -135,7 +136,7 @@ require("lazy").setup({
       local _augroups = {}
       local get_augroup = function(client)
         if not _augroups[client.id] then
-          local group_name = 'kickstart-lsp-format-' .. client.name
+          local group_name = "kickstart-lsp-format-" .. client.name
           local id = vim.api.nvim_create_augroup(group_name, { clear = true })
           _augroups[client.id] = id
         end
@@ -146,8 +147,8 @@ require("lazy").setup({
       -- Whenever an LSP attaches to a buffer, we will run this function.
       --
       -- See `:help LspAttach` for more information about this autocmd event.
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach-format', { clear = true }),
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("kickstart-lsp-attach-format", { clear = true }),
         -- This is where we attach the autoformatting for reasonable clients
         callback = function(args)
           local client_id = args.data.client_id
@@ -161,25 +162,25 @@ require("lazy").setup({
 
           -- Tsserver usually works poorly. Sorry you work with bad languages
           -- You can remove this line if you know what you're doing :)
-          if client.name == 'tsserver' then
+          if client.name == "tsserver" then
             return
           end
 
           -- Create an autocmd that will run *before* we save the buffer.
           --  Run the formatting command for the LSP that has just attached.
-          vim.api.nvim_create_autocmd('BufWritePre', {
+          vim.api.nvim_create_autocmd("BufWritePre", {
             group = get_augroup(client),
             buffer = bufnr,
             callback = function()
               if not format_is_enabled then
                 return
               end
-              vim.lsp.buf.format {
+              vim.lsp.buf.format({
                 async = false,
                 filter = function(c)
                   return c.id == client.id
                 end,
-              }
+              })
             end,
           })
         end,
@@ -239,6 +240,19 @@ require("lazy").setup({
   },
 }, {})
 
+require("conform").setup({
+  format_on_save = {
+    timeout_ms = 500,
+    lsp_fallback = true,
+  },
+  formatters_by_ft = {
+    lua = { "stylua" },
+    json = { "prettier" },
+    css = { "prettier" },
+    javascript = { "prettier" },
+  },
+})
+
 -- keymaps
 local nore = { noremap = true }
 local k = vim.keymap.set
@@ -250,6 +264,9 @@ k("n", "<leader>w", ":write<cr>", nore)
 k("n", "<leader>q", ":quit<cr>", nore)
 k("n", "<leader>x", ":write | quit<cr>", nore)
 k("n", "<leader><leader>", "<c-^>", nore) -- switch to previous buffer
+k("n", "<leader>i", ":Inspect<cr>", nore)
+k("n", "<leader>o", ":luafile %<cr>", nore)
+k("n", "<leader>l", ":Telescope highlights<cr>", nore)
 
 -- lsp
 k("n", "ge", vim.diagnostic.goto_prev, nore)
@@ -421,6 +438,7 @@ vim.defer_fn(function()
       "lua",
       "javascript",
       "typescript",
+      "tsx",
       "vue",
     },
     ts_context_commentstring = {
@@ -432,6 +450,7 @@ end, 0)
 -- do not use virtual text for diagnostics
 vim.diagnostic.config({
   virtual_text = false,
+  signs = true,
 })
 
 --  this function gets run when an lsp connects to a particular buffer
@@ -453,7 +472,7 @@ local on_attach = function(_, bufnr)
   nmap("gd", require("telescope.builtin").lsp_definitions)
   nmap("gr", require("telescope.builtin").lsp_references)
   nmap("gi", require("telescope.builtin").lsp_implementations)
-  nmap("gt", require("telescope.builtin").lsp_type_definitions)
+  nmap("gy", require("telescope.builtin").lsp_type_definitions)
 end
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -468,6 +487,8 @@ local servers = {
 
   volar = {},
 
+  tsserver = {},
+
   lua_ls = {
     Lua = {
       format = {
@@ -480,9 +501,15 @@ local servers = {
   },
 }
 
-
 -- setup neovim lua configuration
-require("neodev").setup()
+require("neodev").setup({
+  override = function(root_dir, library)
+    if root_dir:find(".config/nvim", 1, true) == 1 then
+      library.enabled = true
+      library.plugins = true
+    end
+  end,
+})
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -534,3 +561,24 @@ cmp.setup({
     { name = "luasnip" },
   },
 })
+
+-- colorscheme
+local hl = vim.api.nvim_set_hl
+
+hl(0, "String", { ctermfg = "green" })
+hl(0, "Statement", { ctermfg = "blue" })
+hl(0, "Constant", { ctermfg = "red" })
+hl(0, "Type", { ctermfg = "blue" })
+hl(0, "Comment", { ctermfg = "lightgray" })
+hl(0, "LineNr", { ctermfg = "lightgray", ctermbg = "black" })
+hl(0, "Identifier", { ctermfg = "NONE" })
+hl(0, "DiagnosticSignInfo", { ctermfg = "blue", ctermbg = "black" })
+hl(0, "DiagnosticSignWarn", { ctermfg = "darkyellow", ctermbg = "black" })
+hl(0, "DiagnosticSignError", { ctermfg = "darkred", ctermbg = "black" })
+hl(0, "BgBlack", { ctermfg = "NONE", ctermbg = "black" })
+hl(0, "NormalFloat", { link = "BgBlack" })
+hl(0, "Special", { link = "Normal" })
+hl(0, "Underlined", { ctermfg = "NONE", ctermbg = "NONE", underline = true })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "BgBlack" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "BgBlack" })
+vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "BgBlack" })

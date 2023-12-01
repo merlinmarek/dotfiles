@@ -564,6 +564,13 @@ cmp.setup({
 -- colorscheme
 local hl = vim.api.nvim_set_hl
 
+hl(0, "CursorLineNr", { link = "Normal" })
+hl(0, "CursorLine", { ctermbg = "black" })
+hl(0, "Directory", { link = "Normal" })
+hl(0, "TroubleSource", { link = "Comment" })
+hl(0, "TroubleLocation", { link = "Comment" })
+hl(0, "TroubleIndent", { link = "Normal" })
+hl(0, "TroubleSignError", { ctermfg = "darkred", ctermbg = "NONE" })
 hl(0, "String", { ctermfg = "green" })
 hl(0, "Statement", { ctermfg = "blue" })
 hl(0, "Constant", { ctermfg = "red" })
@@ -583,6 +590,7 @@ hl(0, "diffOldFile", { link = "Normal" })
 hl(0, "diffNewFile", { link = "Normal" })
 hl(0, "PreProc", { link = "Normal" })
 hl(0, "Special", { link = "Normal" })
+hl(0, "Pmenu", { ctermbg = "darkgrey" })
 hl(0, "Underlined", { ctermfg = "NONE", ctermbg = "NONE", underline = true })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "BgBlack" })

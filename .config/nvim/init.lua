@@ -265,7 +265,6 @@ k("n", "<leader>q", ":quit<cr>", nore)
 k("n", "<leader>x", ":write | quit<cr>", nore)
 k("n", "<leader><leader>", "<c-^>", nore) -- switch to previous buffer
 k("n", "<leader>i", ":Inspect<cr>", nore)
-k("n", "<leader>o", ":luafile %<cr>", nore)
 k("n", "<leader>l", ":Telescope highlights<cr>", nore)
 
 -- lsp
@@ -577,8 +576,13 @@ hl(0, "DiagnosticSignWarn", { ctermfg = "darkyellow", ctermbg = "black" })
 hl(0, "DiagnosticSignError", { ctermfg = "darkred", ctermbg = "black" })
 hl(0, "BgBlack", { ctermfg = "NONE", ctermbg = "black" })
 hl(0, "NormalFloat", { link = "BgBlack" })
+hl(0, "diffRemoved", { ctermfg = "darkred" })
+hl(0, "diffAdded", { ctermfg = "green" })
+hl(0, "PreProc", { link = "Normal" })
 hl(0, "Special", { link = "Normal" })
 hl(0, "Underlined", { ctermfg = "NONE", ctermbg = "NONE", underline = true })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "BgBlack" })
+
+require("local")

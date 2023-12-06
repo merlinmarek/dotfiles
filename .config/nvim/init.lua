@@ -83,6 +83,15 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
+    "mfussenegger/nvim-dap",
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+    },
+  },
+  {
     -- pretty diagnostics and quickfix
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -196,6 +205,9 @@ require("lazy").setup({
     },
   },
   {
+    "jay-babu/mason-nvim-dap.nvim",
+  },
+  {
     -- provide autocompletion
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -266,6 +278,7 @@ k("n", "<leader>x", ":write | quit<cr>", nore)
 k("n", "<leader><leader>", "<c-^>", nore) -- switch to previous buffer
 k("n", "<leader>i", ":Inspect<cr>", nore)
 k("n", "<leader>l", ":Telescope highlights<cr>", nore)
+k("n", "s", ":luafile %<cr>", nore)
 
 -- lsp
 k("n", "ge", vim.diagnostic.goto_prev, nore)
@@ -532,6 +545,11 @@ mason_lspconfig.setup_handlers({
   end,
 })
 
+require("mason-nvim-dap").setup({
+  ensure_installed = { "delve" },
+  handlers = {},
+})
+
 -- :help cmp
 local cmp = require("cmp")
 local luasnip = require("luasnip")
@@ -550,6 +568,7 @@ cmp.setup({
     completeopt = "menu,menuone,noinsert",
   },
   mapping = cmp.mapping.preset.insert({
+    ["<c-space>"] = cmp.mapping.complete(),
     ["<cr>"] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
@@ -570,18 +589,18 @@ hl(0, "Directory", { link = "Normal" })
 hl(0, "TroubleSource", { link = "Comment" })
 hl(0, "TroubleLocation", { link = "Comment" })
 hl(0, "TroubleIndent", { link = "Normal" })
-hl(0, "TroubleSignError", { ctermfg = "darkred", ctermbg = "NONE" })
+hl(0, "TroubleSignError", { ctermfg = "darkred", ctermbg = "none" })
 hl(0, "String", { ctermfg = "green" })
 hl(0, "Statement", { ctermfg = "blue" })
 hl(0, "Constant", { ctermfg = "red" })
 hl(0, "Type", { ctermfg = "blue" })
 hl(0, "Comment", { ctermfg = "lightgray" })
 hl(0, "LineNr", { ctermfg = "lightgray", ctermbg = "black" })
-hl(0, "Identifier", { ctermfg = "NONE" })
+hl(0, "Identifier", { ctermfg = "none" })
 hl(0, "DiagnosticSignInfo", { ctermfg = "blue", ctermbg = "black" })
 hl(0, "DiagnosticSignWarn", { ctermfg = "darkyellow", ctermbg = "black" })
 hl(0, "DiagnosticSignError", { ctermfg = "darkred", ctermbg = "black" })
-hl(0, "BgBlack", { ctermfg = "NONE", ctermbg = "black" })
+hl(0, "BgBlack", { ctermfg = "none", ctermbg = "black" })
 hl(0, "NormalFloat", { link = "BgBlack" })
 hl(0, "diffRemoved", { ctermfg = "darkred" })
 hl(0, "diffAdded", { ctermfg = "green" })

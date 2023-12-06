@@ -610,9 +610,31 @@ hl(0, "diffNewFile", { link = "Normal" })
 hl(0, "PreProc", { link = "Normal" })
 hl(0, "Special", { link = "Normal" })
 hl(0, "Pmenu", { ctermbg = "darkgrey" })
-hl(0, "Underlined", { ctermfg = "NONE", ctermbg = "NONE", underline = true })
+hl(0, "Underlined", { ctermfg = "none", ctermbg = "none", underline = true })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "BgBlack" })
+
+require("dapui").setup({
+  expand_lines = false,
+  layouts = {
+    {
+      elements = {
+        { id = "scopes",  size = 0.50 },
+        { id = "watches", size = 0.25 },
+        { id = "stacks",  size = 0.25 },
+      },
+      size = 0.5,
+      position = "right",
+    },
+    {
+      elements = {
+        "console",
+      },
+      size = 10,
+      position = "bottom",
+    },
+  },
+})
 
 require("local")

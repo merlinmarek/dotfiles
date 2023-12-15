@@ -14,17 +14,18 @@ vim.opt.expandtab = true          -- insert spaces when pressing tab
 vim.opt.tabstop = 2               -- use 2 spaces for a tab
 vim.opt.shiftwidth = 0            -- use whatever tabstop is
 vim.opt.softtabstop = -1          -- use whatever shiftwidth is
-vim.opt.splitright = true         -- more intuitive split positions
-vim.opt.splitbelow = true         -- more intuitive split positions
-vim.opt.mouse = ""                -- allow select and copy from vim via mouse
-vim.opt.shortmess:append("cI")    -- do not show intro on startup
-vim.opt.laststatus = 1            -- only show statusline if there are multiple windows
-vim.opt.inccommand = "nosplit"    -- highlight matched words when typing substitution commands
-vim.opt.scrolloff = 5             -- keep lines above and below the cursor while scrolling
-vim.opt.foldlevelstart = 99       -- expand all folds on start
-vim.opt.updatetime = 100          -- check if the file has been changed externally more often
-vim.opt.signcolumn = "number"     -- show signs in number column
-vim.g.syntax = false              -- disable regex based syntax highlighting, use treesitter instead
+-- if splitright is set, step into while debugging does not jump to the function
+-- vim.opt.splitright = true         -- more intuitive split positions
+vim.opt.splitbelow = true      -- more intuitive split positions
+vim.opt.mouse = ""             -- allow select and copy from vim via mouse
+vim.opt.shortmess:append("cI") -- do not show intro on startup
+vim.opt.laststatus = 1         -- only show statusline if there are multiple windows
+vim.opt.inccommand = "nosplit" -- highlight matched words when typing substitution commands
+vim.opt.scrolloff = 5          -- keep lines above and below the cursor while scrolling
+vim.opt.foldlevelstart = 99    -- expand all folds on start
+vim.opt.updatetime = 100       -- check if the file has been changed externally more often
+vim.opt.signcolumn = "number"  -- show signs in number column
+vim.g.syntax = false           -- disable regex based syntax highlighting, use treesitter instead
 
 -- disable unused builtin plugins
 vim.g.loaded_gzip = 1
@@ -287,6 +288,20 @@ k("n", "<leader>e", vim.diagnostic.open_float, nore)
 k("n", "<leader>d", vim.diagnostic.setloclist, nore)
 k("n", "<leader>j", ":nohlsearch<cr>", nore) -- remove current search highlighting
 
+-- debugging
+k("n", "<f4>", function()
+  require("dap").terminate()
+end)
+k("n", "<f5>", function()
+  require("dap").continue()
+end)
+k("n", "<f6>", function()
+  require("dap").step_over()
+end)
+k("n", "<f7>", function()
+  require("dap").step_into()
+end)
+
 -- move on visual lines
 k({ "n", "x" }, "k", "gk", { silent = true })
 k({ "n", "x" }, "j", "gj", { silent = true })
@@ -427,6 +442,7 @@ vim.keymap.set("n", "<leader>h", require("telescope.builtin").oldfiles)
 vim.keymap.set("n", "<leader>b", require("telescope.builtin").buffers)
 vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files)
 vim.keymap.set("n", "<leader>g", require("telescope.builtin").live_grep)
+vim.keymap.set("n", "<leader>p", require("telescope.builtin").commands)
 vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics)
 vim.keymap.set("n", "<leader>sr", require("telescope.builtin").resume)
 
@@ -479,6 +495,7 @@ local on_attach = function(_, bufnr)
 
   nmap("<leader>r", vim.lsp.buf.rename)
   nmap("<leader>a", vim.lsp.buf.code_action)
+  vim.keymap.set("v", "<leader>a", vim.lsp.buf.code_action, { buffer = bufnr })
   nmap("<leader>e", vim.lsp.buf.hover)
   nmap("gD", vim.lsp.buf.declaration)
   nmap("gd", require("telescope.builtin").lsp_definitions)
@@ -496,6 +513,8 @@ local servers = {
   gopls = {
     gofumpt = true,
   },
+
+  pyright = {},
 
   volar = {},
 
@@ -611,11 +630,26 @@ hl(0, "PreProc", { link = "Normal" })
 hl(0, "Special", { link = "Normal" })
 hl(0, "Pmenu", { ctermbg = "darkgrey" })
 hl(0, "Underlined", { ctermfg = "none", ctermbg = "none", underline = true })
+hl(0, "StatusLine", { ctermfg = "lightgray", ctermbg = "black" })
+hl(0, "StatusLineNC", { link = "StatusLine" })
+hl(0, "EndOfBuffer", { ctermfg = "darkgrey" })
+hl(0, "VertSplit", { ctermfg = "darkgrey" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "BgBlack" })
 
+-- hide ^^^ markers that are inserted by vim
+-- if StatusLine and StatusLineNC have the
+-- same highlight
+--
+-- this is a non-breaking space --------|
+--                                      v
+vim.api.nvim_command("set fillchars=stl: ")
+
 require("dapui").setup({
+  controls = {
+    enabled = false,
+  },
   expand_lines = false,
   layouts = {
     {
@@ -629,7 +663,7 @@ require("dapui").setup({
     },
     {
       elements = {
-        "console",
+        "repl",
       },
       size = 10,
       position = "bottom",

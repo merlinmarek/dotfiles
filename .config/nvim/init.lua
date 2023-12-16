@@ -482,7 +482,24 @@ vim.diagnostic.config({
 })
 
 --  this function gets run when an lsp connects to a particular buffer
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
+  local active_clients = vim.lsp.get_active_clients()
+  if client.name == 'denols' then
+    for _, client_ in pairs(active_clients) do
+      -- stop tsserver if denols is already active
+      if client_.name == 'tsserver' then
+        client_.stop()
+      end
+    end
+  elseif client.name == 'tsserver' then
+    for _, client_ in pairs(active_clients) do
+      -- prevent tsserver from starting if denols is already active
+      if client_.name == 'denols' then
+        client.stop()
+      end
+    end
+  end
+
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
   local nmap = function(keys, func, desc)
@@ -513,13 +530,10 @@ local servers = {
   gopls = {
     gofumpt = true,
   },
-
   pyright = {},
-
+  denols = {},
   volar = {},
-
   tsserver = {},
-
   lua_ls = {
     Lua = {
       format = {
@@ -615,7 +629,7 @@ hl(0, "Constant", { ctermfg = "red" })
 hl(0, "Type", { ctermfg = "blue" })
 hl(0, "Comment", { ctermfg = "lightgray" })
 hl(0, "LineNr", { ctermfg = "lightgray", ctermbg = "black" })
-hl(0, "Identifier", { ctermfg = "none" })
+hl(0, "Identifier", { link = "Normal" })
 hl(0, "DiagnosticSignInfo", { ctermfg = "blue", ctermbg = "black" })
 hl(0, "DiagnosticSignWarn", { ctermfg = "darkyellow", ctermbg = "black" })
 hl(0, "DiagnosticSignError", { ctermfg = "darkred", ctermbg = "black" })
@@ -637,7 +651,6 @@ hl(0, "VertSplit", { ctermfg = "darkgrey" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "BgBlack" })
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "BgBlack" })
-
 -- hide ^^^ markers that are inserted by vim
 -- if StatusLine and StatusLineNC have the
 -- same highlight
@@ -671,4 +684,4 @@ require("dapui").setup({
   },
 })
 
-require("local")
+-- require("local")

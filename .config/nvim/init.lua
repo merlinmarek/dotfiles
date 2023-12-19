@@ -103,6 +103,13 @@ require("lazy").setup({
     },
   },
   {
+    -- inject lsp diagnostics and code actions
+    "nvimtools/none-ls.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
+  {
     -- provide ai code completions
     "github/copilot.vim",
   },
@@ -255,7 +262,7 @@ require("lazy").setup({
 
 require("conform").setup({
   format_on_save = {
-    timeout_ms = 500,
+    timeout_ms = 2000,
     lsp_fallback = true,
   },
   formatters_by_ft = {
@@ -530,6 +537,7 @@ local servers = {
   gopls = {
     gofumpt = true,
   },
+  ruff_lsp = {},
   pyright = {},
   denols = {},
   volar = {},
@@ -684,4 +692,4 @@ require("dapui").setup({
   },
 })
 
--- require("local")
+require("local")

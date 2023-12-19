@@ -534,15 +534,24 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 local servers = {
+  -- golang
   gopls = {
     gofumpt = true,
   },
   golangci_lint_ls = {},
-  ruff_lsp = {},
+
+  -- python
   pyright = {},
+  ruff_lsp = {},
+
+  -- typescript
   denols = {},
-  volar = {},
   tsserver = {},
+
+  -- vue
+  volar = {},
+
+  -- lua
   lua_ls = {
     Lua = {
       format = {

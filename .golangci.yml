@@ -1,0 +1,8 @@
+linters:
+  enable-all: true
+linters-settings:
+  gomnd:
+    settings:
+      mnd:
+        ignored-numbers: 0o400,0o600,0o660,0o640,0o644,0o700,0o750
+        ignored-functions: os.WriteFile,os.MkdirAll

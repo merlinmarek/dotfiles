@@ -537,6 +537,7 @@ local servers = {
   gopls = {
     gofumpt = true,
   },
+  golangci_lint_ls = {},
   ruff_lsp = {},
   pyright = {},
   denols = {},

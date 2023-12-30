@@ -14,20 +14,20 @@ order += "tztime date"
 order += "tztime time"
 
 cpu_usage {
-        format = " %usage"
+        format = "   %usage"
         max_threshold = 80
         separator_block_width = 20
 }
 
 
 ethernet _first_ {
-        format_up = " %ip"
-        format_down = ""
+        format_up = "  %ip"
+        format_down = ""
         separator_block_width = 20
 }
 
 tztime date {
-        format = " %d %b"
+        format = "  %d %b"
         separator_block_width = 20
 }
 
@@ -37,11 +37,11 @@ tztime time {
 }
 
 memory {
-        format = " %available"
+        format = "  %available"
         separator_block_width = 20
 }
 
 disk "/" {
-        format = " %avail"
+        format = "  %avail"
         separator_block_width = 20
 }

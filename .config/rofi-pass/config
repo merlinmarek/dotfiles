@@ -1,2 +1,3 @@
 default_user=merlin_marek@web.de
 default_do=autotype
+help_color="#4872FF" # workaround for https://github.com/carnager/rofi-pass/issues/226

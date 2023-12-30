@@ -1,7 +1,7 @@
 # alt key as modifier
 set $mod Mod1
 
-font pango:SauceCodePro Nerd Font Mono 16
+font pango:SourceCodePro Nerd Font Mono 16
 
 bindsym $mod+Return exec xfce4-terminal
 bindsym $mod+q kill

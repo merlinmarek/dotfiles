@@ -171,6 +171,9 @@ local highlights = {
   DiagnosticSignInfo          = {},                                           -- Used for "Info" signs in sign column.
   DiagnosticSignHint          = {},                                           -- Used for "Hint" signs in sign column.
   DiagnosticSignOk            = {},                                           -- Used for "Ok" signs in sign column.
+
+  diffAdded                   = { ctermfg = c.green },
+  diffRemoved                 = { ctermfg = c.darkred },
 }
 
 for hl, spec in pairs(highlights) do

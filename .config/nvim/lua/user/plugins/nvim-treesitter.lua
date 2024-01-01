@@ -19,6 +19,9 @@ return {
           },
         },
       },
+      highlight = {
+        enable = "true",
+      },
       ensure_installed = {
         "go",
         "lua",

@@ -3,5 +3,5 @@ return {
   opts = {
     ensure_installed = { "delve" },
     handlers = {},
-  }
+  },
 }

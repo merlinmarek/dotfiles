@@ -56,9 +56,14 @@ return {
     vim.filetype.add({ extension = { typ = "typst" } })
     lspconfig["typst_lsp"].setup({
       capabilities = capabilities,
+      on_init = function(client)
+        -- enable formatting
+        client.server_capabilities.documentFormattingProvider = true
+      end,
       on_attach = on_attach,
       settings = {
         exportPdf = "onSave",
+        experimentalFormatterMode = "On",
       },
     })
 

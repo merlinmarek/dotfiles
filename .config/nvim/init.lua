@@ -115,3 +115,5 @@ local function watch_colorscheme()
 end
 
 watch_colorscheme()
+
+vim.cmd("set spelllang=de")

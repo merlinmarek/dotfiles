@@ -29,6 +29,7 @@ return {
         "typescript",
         "tsx",
         "vue",
+        "rust",
       },
       ts_context_commentstring = {
         enable = true,

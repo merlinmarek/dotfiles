@@ -167,9 +167,9 @@ local highlights = {
   DiagnosticFloatingHint = {}, -- Used to color "Hint" diagnostic messages in diagnostics float.
   DiagnosticFloatingOk = {}, -- Used to color "Ok" diagnostic messages in diagnostics float.
   DiagnosticSignError = { ctermfg = c.darkred, ctermbg = c.black }, -- Used for "Error" signs in sign column.
-  DiagnosticSignWarn = { ctermfg = c.yellow }, -- Used for "Warn" signs in sign column.
-  DiagnosticSignInfo = { ctermfg = c.blue }, -- Used for "Info" signs in sign column.
-  DiagnosticSignHint = {}, -- Used for "Hint" signs in sign column.
+  DiagnosticSignWarn = { ctermfg = c.yellow, ctermbg = c.black }, -- Used for "Warn" signs in sign column.
+  DiagnosticSignInfo = { ctermfg = c.blue, ctermbg = c.black }, -- Used for "Info" signs in sign column.
+  DiagnosticSignHint = { ctermfg = c.gray, ctermbg = c.black }, -- Used for "Hint" signs in sign column.
   DiagnosticSignOk = {}, -- Used for "Ok" signs in sign column.
 
   diffAdded = { ctermfg = c.green },
@@ -181,6 +181,7 @@ local highlights = {
 for hl, spec in pairs(highlights) do
   vim.api.nvim_set_hl(0, hl, spec)
 
+  vim.fn.sign_define("DiagnosticSignHint", { numhl = "DiagnosticSignHint" })
   vim.fn.sign_define("DiagnosticSignInfo", { numhl = "DiagnosticSignInfo" })
   vim.fn.sign_define("DiagnosticSignWarn", { numhl = "DiagnosticSignWarn" })
   vim.fn.sign_define("DiagnosticSignError", { numhl = "DiagnosticSignError" })

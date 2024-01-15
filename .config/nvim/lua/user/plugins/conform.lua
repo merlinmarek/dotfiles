@@ -19,6 +19,7 @@ return {
         css = { "prettier" },
         javascript = { "prettier" },
         html = { "prettier" },
+        vue = { "prettierd" },
       },
     })
   end,

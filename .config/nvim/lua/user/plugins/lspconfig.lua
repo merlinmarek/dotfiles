@@ -36,7 +36,7 @@ return {
       on_attach = on_attach,
     })
 
-    lspconfig["pylyzer"].setup({
+    lspconfig["pyright"].setup({
       capabilities = capabilities,
       on_attach = on_attach,
     })

@@ -15,10 +15,11 @@ return {
       },
       formatters_by_ft = {
         lua = { "stylua" },
-        json = { "prettier" },
-        css = { "prettier" },
-        javascript = { "prettier" },
-        html = { "prettier" },
+        json = { "prettierd" },
+        css = { "prettierd" },
+        javascript = { "prettierd" },
+        typescript = { "prettierd" },
+        html = { "prettierd" },
         vue = { "prettierd" },
       },
     })

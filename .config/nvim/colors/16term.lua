@@ -48,14 +48,14 @@ local highlights = {
   FoldColumn = {}, -- 'foldcolumn'
   SignColumn = { ctermbg = c.black }, -- Column where |signs| are displayed
   IncSearch = { ctermbg = c.yellow, ctermfg = c.black }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
-  Substitute = {}, -- |:substitute| replacement text highlighting
+  Substitute = { ctermbg = c.yellow, ctermfg = c.black }, -- |:substitute| replacement text highlighting
   LineNr = { ctermfg = c.darkgray, ctermbg = c.black }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
   LineNrAbove = {}, -- Line number for when the 'relativenumber' option is set, above the cursor line
   LineNrBelow = {}, -- Line number for when the 'relativenumber' option is set, below the cursor line
   CursorLineNr = {}, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
   CursorLineFold = {}, -- Like FoldColumn when 'cursorline' is set for the cursor line
   CursorLineSign = {}, -- Like SignColumn when 'cursorline' is set for the cursor line
-  MatchParen = {}, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+  MatchParen = { ctermfg = c.white, cterm = { bold = true } }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
   ModeMsg = {}, -- 'showmode' message (e.g., "-- INSERT -- ")
   MsgArea = {}, -- Area for messages and cmdline
   MsgSeparator = {}, -- Separator for scrolled messages, `msgsep` flag of 'display'

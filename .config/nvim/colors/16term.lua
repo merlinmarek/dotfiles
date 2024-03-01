@@ -35,10 +35,10 @@ local highlights = {
   CursorColumn = {}, -- Screen-column at the cursor, when 'cursorcolumn' is set.
   CursorLine = {}, -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
   Directory = {}, -- Directory names (and other special names in listings)
-  DiffAdd = {}, -- Diff mode: Added line |diff.txt|
-  DiffChange = {}, -- Diff mode: Changed line |diff.txt|
-  DiffDelete = {}, -- Diff mode: Deleted line |diff.txt|
-  DiffText = {}, -- Diff mode: Changed text within a changed line |diff.txt|
+  DiffAdd = { ctermfg = c.green }, -- Diff mode: Added line |diff.txt|
+  DiffChange = { ctermbg = c.magenta, ctermfg = c.black }, -- Diff mode: Changed line |diff.txt|
+  DiffDelete = { ctermfg = c.red }, -- Diff mode: Deleted line |diff.txt|
+  DiffText = { ctermbg = c.magenta, ctermfg = c.white }, -- Diff mode: Changed text within a changed line |diff.txt|
   EndOfBuffer = {}, -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
   TermCursor = { cterm = { reverse = true } }, -- Cursor in a focused terminal
   TermCursorNC = {}, -- Cursor in an unfocused terminal

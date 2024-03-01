@@ -17,6 +17,10 @@ return {
         "volar",
         "tsserver",
         "typst_lsp",
+        "templ",
+        "html",
+        "emmet_language_server",
+        "svelte",
       },
     })
     -- -- golang

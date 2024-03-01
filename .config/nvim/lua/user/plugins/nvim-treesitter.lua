@@ -31,6 +31,7 @@ return {
         "vue",
         "rust",
         "svelte",
+        "templ",
       },
       ts_context_commentstring = {
         enable = true,

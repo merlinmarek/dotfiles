@@ -46,6 +46,29 @@ return {
       on_attach = on_attach,
     })
 
+    lspconfig["html"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "html", "templ" },
+    })
+
+    lspconfig["svelte"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
+    lspconfig["emmet_language_server"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "html", "templ" },
+    })
+
+    vim.filetype.add({ extension = { templ = "templ" } })
+    lspconfig["templ"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
     lspconfig["tsserver"].setup({
       capabilities = capabilities,
       on_attach = on_attach,

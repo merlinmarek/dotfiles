@@ -21,6 +21,7 @@ return {
         "html",
         "emmet_language_server",
         "svelte",
+        "ruff_lsp",
       },
     })
     -- -- golang

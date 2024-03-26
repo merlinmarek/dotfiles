@@ -31,6 +31,11 @@ return {
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
+    lspconfig["ruff_lsp"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
     lspconfig["gopls"].setup({
       capabilities = capabilities,
       on_attach = on_attach,

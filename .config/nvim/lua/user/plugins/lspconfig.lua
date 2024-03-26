@@ -72,6 +72,12 @@ return {
     lspconfig["templ"].setup({
       capabilities = capabilities,
       on_attach = on_attach,
+      cmd = {
+        "/home/merlinmarek/.bin/templ",
+        "lsp",
+        "-http",
+        "localhost:7474",
+      },
     })
 
     lspconfig["tsserver"].setup({

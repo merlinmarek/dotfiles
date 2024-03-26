@@ -16,13 +16,8 @@ return {
     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
       group = lint_augroup,
       callback = function()
-        -- print("linting")
         lint.try_lint()
       end,
     })
-
-    vim.keymap.set("n", "<leader>o", function()
-      lint.try_lint()
-    end)
   end,
 }

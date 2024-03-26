@@ -24,33 +24,5 @@ return {
         "ruff_lsp",
       },
     })
-    -- -- golang
-    --   gopls = {
-    --     gofumpt = true,
-    --   },
-    --   golangci_lint_ls = {},
-    --
-    --   -- python
-    --   pylyzer = {},
-    --   ruff_lsp = {},
-    --
-    --   -- typescript
-    --   denols = {},
-    --   tsserver = {},
-    --
-    --   -- vue
-    --   volar = {},
-    --
-    --   -- lua
-    --   lua_ls = {
-    --     Lua = {
-    --       format = {
-    --         enable = true,
-    --         quote_style = "double",
-    --       },
-    --       workspace = { checkThirdParty = false },
-    --       telemetry = { enable = false },
-    --     },
-    --   },
   end,
 }

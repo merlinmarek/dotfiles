@@ -1,4 +1,4 @@
+-- browse files
 return {
-  -- browse files
   "justinmk/vim-dirvish",
 }

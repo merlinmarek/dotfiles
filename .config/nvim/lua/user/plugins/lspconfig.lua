@@ -52,8 +52,8 @@ return {
       init_options = {
         vue = {
           hybridMode = false,
-        }
-      }
+        },
+      },
     })
 
     lspconfig["html"].setup({

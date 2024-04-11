@@ -13,7 +13,7 @@ return {
       ensure_installed = {
         "gopls",
         "lua_ls",
-        "pylyzer",
+        "pyright",
         "volar",
         "tsserver",
         "typst_lsp",

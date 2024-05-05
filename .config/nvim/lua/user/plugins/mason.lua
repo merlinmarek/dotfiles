@@ -22,6 +22,7 @@ return {
         "emmet_language_server",
         "svelte",
         "ruff_lsp",
+        "denols",
       },
     })
   end,

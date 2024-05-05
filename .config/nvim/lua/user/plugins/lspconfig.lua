@@ -84,6 +84,34 @@ return {
       on_attach = on_attach,
     })
 
+    lspconfig["denols"].setup({
+      root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+      init_options = {
+        lint = true,
+        unstable = true,
+        suggest = {
+          imports = {
+            hosts = {
+              ["https://deno.land"] = true,
+              ["https://cdn.nest.land"] = true,
+              ["https://crux.land"] = true,
+            }
+          }
+        }
+      },
+      on_attach = function(client, bufnr)
+        local active_clients = vim.lsp.get_active_clients()
+        for _, active_client in pairs(active_clients) do
+          -- stop tsserver if denols is active
+          if active_client.name == "tsserver" then
+            active_client.stop()
+          end
+        end
+        on_attach(client, bufnr)
+      end,
+    })
+
+
     -- vim detects .typ files as sql
     -- we need to add this manually so that the lsp is properly attached
     vim.filetype.add({ extension = { typ = "typst" } })

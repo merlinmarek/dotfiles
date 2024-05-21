@@ -180,9 +180,9 @@ local highlights = {
 
 for hl, spec in pairs(highlights) do
   vim.api.nvim_set_hl(0, hl, spec)
-
-  vim.fn.sign_define("DiagnosticSignHint", { numhl = "DiagnosticSignHint" })
-  vim.fn.sign_define("DiagnosticSignInfo", { numhl = "DiagnosticSignInfo" })
-  vim.fn.sign_define("DiagnosticSignWarn", { numhl = "DiagnosticSignWarn" })
-  vim.fn.sign_define("DiagnosticSignError", { numhl = "DiagnosticSignError" })
 end
+
+vim.fn.sign_define("DiagnosticSignHint", { numhl = "DiagnosticSignHint" })
+vim.fn.sign_define("DiagnosticSignInfo", { numhl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignWarn", { numhl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignError", { numhl = "DiagnosticSignError" })

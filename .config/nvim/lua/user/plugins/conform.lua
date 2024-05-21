@@ -21,6 +21,11 @@ return {
         typescript = { "prettierd" },
         html = { "prettierd" },
         vue = { "prettierd" },
+        python = {
+          "ruff_fix",
+          "ruff_organize_imports",
+          "ruff_format",
+        },
       },
     })
   end,

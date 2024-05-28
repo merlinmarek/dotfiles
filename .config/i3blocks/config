@@ -23,10 +23,6 @@ interval=5
 command=type blocks > /dev/null 2>&1 && blocks ram
 interval=5
 
-[scope]
-command=type scope > /dev/null 2>&1 && scope get
-interval=1
-
 [date]
 command=date '+%d %b'
 interval=1

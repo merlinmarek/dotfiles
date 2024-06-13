@@ -2,26 +2,16 @@ linters:
   enable-all: true
   disable:
     # deprecated linters
-    - exhaustivestruct
-    - scopelint
-    - maligned
-    - ifshort
-    - varcheck
-    - nosnakecase
-    - structcheck
-    - interfacer
-    - deadcode
-    - golint
+    - gomnd
+    - execinquery
 
     - gomodguard # flag go module dependencies based on allow/blocklist
     - gomoddirectives # flag go module directives
 
 linters-settings:
-  gomnd:
-    settings:
-      mnd:
-        ignored-numbers: 0o400,0o600,0o660,0o640,0o644,0o700,0o750
-        ignored-functions: os.WriteFile,os.MkdirAll
+  mnd:
+    ignored-numbers: 0o400,0o600,0o660,0o640,0o644,0o700,0o750
+    ignored-functions: os.WriteFile,os.MkdirAll
 
 issues:
   fix: true

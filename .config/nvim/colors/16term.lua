@@ -176,6 +176,7 @@ local highlights = {
   diffRemoved = { ctermfg = c.darkred },
 
   ["@constant.builtin.go"] = { ctermfg = c.red },
+  ["@string.regexp.typescript"] = { link = "String" },
 }
 
 for hl, spec in pairs(highlights) do

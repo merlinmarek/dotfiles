@@ -32,4 +32,7 @@ vim.g.syntax = false -- disable regex based syntax highlighting, use treesitter 
 vim.diagnostic.config({
   virtual_text = false,
   signs = true,
+  float = {
+    source = true,
+  },
 })

@@ -76,6 +76,7 @@ vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 -- abbreviations
 vim.cmd("iabbrev rud refactor: update dependencies")
+vim.cmd("iabbrev newvue <script setup lang='ts'></script><template></template>")
 
 vim.cmd.colorscheme("16term")
 

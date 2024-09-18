@@ -31,6 +31,16 @@ return {
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
+    lspconfig["omnisharp"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      cmd = { "dotnet", vim.fn.stdpath("data") .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+      enable_import_completion = true,
+      organize_imports_on_format = true,
+      enable_roslyn_analyzers = true,
+      root_dir = lspconfig.util.root_pattern("*.csproj"),
+    })
+
     lspconfig["ruff_lsp"].setup({
       capabilities = capabilities,
       on_attach = on_attach,

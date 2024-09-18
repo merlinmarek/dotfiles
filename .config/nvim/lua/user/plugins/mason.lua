@@ -23,6 +23,7 @@ return {
         "svelte",
         "ruff_lsp",
         "denols",
+        "omnisharp",
       },
     })
   end,

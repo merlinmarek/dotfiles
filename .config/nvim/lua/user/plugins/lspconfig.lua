@@ -79,16 +79,6 @@ return {
       },
     })
 
-    lspconfig["volar"].setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      init_options = {
-        vue = {
-          hybridMode = true,
-        },
-      },
-    })
-
     lspconfig["html"].setup({
       capabilities = capabilities,
       on_attach = on_attach,

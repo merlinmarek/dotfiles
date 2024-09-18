@@ -14,7 +14,6 @@ return {
         "gopls",
         "lua_ls",
         "pyright",
-        "volar",
         "ts_ls",
         "typst_lsp",
         "templ",

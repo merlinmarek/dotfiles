@@ -56,12 +56,35 @@ return {
       on_attach = on_attach,
     })
 
+    local mason_registry = require("mason-registry")
+    local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+      .. "/node_modules/@vue/language-server"
+
+    lspconfig["ts_ls"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      init_options = {
+        plugins = {
+          {
+            name = "@vue/typescript-plugin",
+            location = vue_language_server_path,
+            languages = { "vue" },
+          },
+        },
+      },
+      filetypes = {
+        "typescript",
+        "javascript",
+        "vue",
+      },
+    })
+
     lspconfig["volar"].setup({
       capabilities = capabilities,
       on_attach = on_attach,
       init_options = {
         vue = {
-          hybridMode = false,
+          hybridMode = true,
         },
       },
     })
@@ -89,11 +112,6 @@ return {
       on_attach = on_attach,
     })
 
-    lspconfig["tsserver"].setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
-
     lspconfig["denols"].setup({
       root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
       init_options = {
@@ -105,22 +123,21 @@ return {
               ["https://deno.land"] = true,
               ["https://cdn.nest.land"] = true,
               ["https://crux.land"] = true,
-            }
-          }
-        }
+            },
+          },
+        },
       },
       on_attach = function(client, bufnr)
         local active_clients = vim.lsp.get_active_clients()
         for _, active_client in pairs(active_clients) do
           -- stop tsserver if denols is active
-          if active_client.name == "tsserver" then
+          if active_client.name == "ts_ls" then
             active_client.stop()
           end
         end
         on_attach(client, bufnr)
       end,
     })
-
 
     -- vim detects .typ files as sql
     -- we need to add this manually so that the lsp is properly attached

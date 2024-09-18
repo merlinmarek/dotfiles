@@ -15,7 +15,7 @@ return {
         "lua_ls",
         "pyright",
         "volar",
-        "tsserver",
+        "ts_ls",
         "typst_lsp",
         "templ",
         "html",

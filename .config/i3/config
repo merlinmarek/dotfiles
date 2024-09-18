@@ -90,7 +90,7 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 
 # screenshots
 bindsym Print exec flameshot full -p /tmp
-bindsym Shift+Print exec flameshot gui -p /tmp
+bindsym Shift+Print exec flameshot gui
 
 # lock screen
 bindsym Pause exec i3lock -c 262626 && sleep 0.3 && xset dpms force off

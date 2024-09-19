@@ -177,13 +177,14 @@ local highlights = {
 
   ["@constant.builtin.go"] = { ctermfg = c.red },
   ["@string.regexp.typescript"] = { link = "String" },
+  ["@lsp.type.class.vue"] = { link = "Normal" },
 }
 
 for hl, spec in pairs(highlights) do
   vim.api.nvim_set_hl(0, hl, spec)
 end
 
-vim.fn.sign_define("DiagnosticSignHint", { numhl = "DiagnosticSignHint" })
-vim.fn.sign_define("DiagnosticSignInfo", { numhl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignWarn", { numhl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignError", { numhl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", numhl = "DiagnosticSignHint" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "", numhl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", numhl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignError", { text = "", numhl = "DiagnosticSignError" })

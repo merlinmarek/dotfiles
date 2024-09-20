@@ -1,0 +1,29 @@
+# Global properties
+separator=true
+separator_block_width=15
+
+# [cpu]
+# command=date '+%d %b %H %M %s'
+# interval=once
+# signal=10
+
+[ip]
+command=type blocks > /dev/null 2>&1 && blocks ip enp34s0
+interval=5
+
+[disk]
+command=type blocks > /dev/null 2>&1 && blocks disk
+interval=5
+
+[ram]
+command=type blocks > /dev/null 2>&1 && blocks ram
+interval=5
+
+[date]
+command=date '+%d %b'
+interval=1
+
+[time]
+command=date '+%H:%M'
+interval=1
+

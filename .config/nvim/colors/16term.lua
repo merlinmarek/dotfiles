@@ -178,6 +178,11 @@ local highlights = {
   ["@constant.builtin.go"] = { ctermfg = c.red },
   ["@string.regexp.typescript"] = { link = "String" },
   ["@lsp.type.class.vue"] = { link = "Normal" },
+
+  AvanteConflictCurrentLabel = { ctermbg = c.black, cterm = { bold = true } },
+  AvanteConflictCurrent = { ctermbg = c.black },
+  AvanteConflictIncomingLabel = { ctermbg = 8, cterm = { bold = true } },
+  AvanteConflictIncoming = { ctermbg = 8 },
 }
 
 for hl, spec in pairs(highlights) do

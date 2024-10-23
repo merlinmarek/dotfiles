@@ -24,6 +24,7 @@ return {
         "ruff_lsp",
         "denols",
         "omnisharp",
+        "tinymist",
       },
     })
   end,

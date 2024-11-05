@@ -4,6 +4,7 @@ linters:
     # deprecated linters
     - gomnd
     - execinquery
+    - exportloopref
 
     - gomodguard # flag go module dependencies based on allow/blocklist
     - gomoddirectives # flag go module directives

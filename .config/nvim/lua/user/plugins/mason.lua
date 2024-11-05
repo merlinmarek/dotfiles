@@ -25,6 +25,7 @@ return {
         "denols",
         "omnisharp",
         "tinymist",
+        "golangci_lint_ls",
       },
     })
   end,
